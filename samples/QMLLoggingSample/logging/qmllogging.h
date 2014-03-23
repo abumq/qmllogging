@@ -38,25 +38,25 @@ private:
     }
 public:
     // Invokable functions
-    Q_INVOKABLE inline void info(QString text) {
+    Q_INVOKABLE void info(QString text) {
         LOG(INFO) << text;
     }
-    Q_INVOKABLE inline void warning(QString text) {
+    Q_INVOKABLE void warning(QString text) {
         LOG(WARNING) << text;
     }
-    Q_INVOKABLE inline void debug(QString text) {
+    Q_INVOKABLE void debug(QString text) {
         LOG(DEBUG) << text;
     }
-    Q_INVOKABLE inline void error(QString text) {
+    Q_INVOKABLE void error(QString text) {
         LOG(ERROR) << text;
     }
-    Q_INVOKABLE inline void fatal(QString text) {
+    Q_INVOKABLE void fatal(QString text) {
         LOG(FATAL) << text;
     }
-    Q_INVOKABLE inline void trace(QString text) {
+    Q_INVOKABLE void trace(QString text) {
         LOG(TRACE) << text;
     }
-    Q_INVOKABLE inline void verbose(int vlevel, QString text) {
+    Q_INVOKABLE void verbose(int vlevel, QString text) {
         VLOG(vlevel) << text;
     }
 };
