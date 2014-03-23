@@ -2,6 +2,8 @@
 //  QMLLogging v1.0 (development version)
 //  Single-header only, Easylogging++ extension for QML logging
 //
+//  Requires: Easylogging++ v9.59 (or higher)
+//
 //  Copyright (c) 2012 - 2014 Majid Khan
 //
 //  This library is released under the MIT Licence.
