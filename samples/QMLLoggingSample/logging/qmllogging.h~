@@ -1,5 +1,0 @@
-// Header for sample that sub-includes original header from src/ folder
-#ifndef QMLLOGGING_FOR_SAMPLES_H
-#define QMLLOGGING_FOR_SAMPLES_H
-#include "../../src/qmllogging.h"
-#endif // QMLLOGGING_FOR_SAMPLES_H
