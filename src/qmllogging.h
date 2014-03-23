@@ -24,22 +24,7 @@
 #define _ELPP_QT_LOGGING
 #include <easylogging++.h>
 
-class QMLLogging : public QObject
-{
-    Q_OBJECT
-public:
-    static void registerNew(const char* contextName = "Log") {
-        qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 1, 0,
-            contextName, QMLLogging::newInstance);
-    }
-private:
-    explicit QMLLogging(QObject *parent = 0) : QObject(parent) { }
-
-    static QObject* newInstance(QQmlEngine*, QJSEngine*) {
-        return new QMLLogging();
-    }
-public:
-    // Invokable functions
+// Invokable log functions
 #define FUNCTION_DEFINER(type)\
     Q_INVOKABLE void info(type text) {\
         LOG(INFO) << text;\
@@ -62,8 +47,27 @@ public:
     Q_INVOKABLE void verbose(int vlevel, type text) {\
         VLOG(vlevel) << text;\
     }
-    
+
+class QMLLogging : public QObject
+{
+    Q_OBJECT
+public:
+    static void registerNew(const char* contextName = "Log") {
+        qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 1, 0,
+            contextName, QMLLogging::newInstance);
+    }
+private:
+    explicit QMLLogging(QObject *parent = 0) : QObject(parent) { }
+
+    static QObject* newInstance(QQmlEngine*, QJSEngine*) {
+        return new QMLLogging();
+    }
+public:
     FUNCTION_DEFINER(QString)
+    Q_INVOKABLE el::base::Trackable time(QString name) {
+        return el::base::Trackable(name.toStdString());
+    }
 };
 
+#undef FUNCTION_DEFINER
 #endif // QMLLOGGING_H
