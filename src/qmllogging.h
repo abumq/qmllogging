@@ -1,5 +1,5 @@
 //
-//  QMLLogging v1.0 (development version)
+//  QMLLogging v0.0 (development / unreleased version)
 //  Single-header only, Easylogging++ extension for QML logging
 //
 //  Requires: Easylogging++ v9.59 (or higher)
@@ -47,7 +47,8 @@
     Q_INVOKABLE void verbose(int vlevel, type text) {\
         VLOG(vlevel) << text;\
     }
-
+namespace el {
+namespace qml {
 class QMLLogging : public QObject
 {
     Q_OBJECT
@@ -65,6 +66,14 @@ private:
 public:
     FUNCTION_DEFINER(QString)
 };
-
+class VersionInfo : el::base::StaticClass {
+public:
+    /// @brief Current version number
+    static inline const std::string version(void) { return std::string("0.0"); }
+    /// @brief Release date of current version
+    static inline const std::string releaseDate(void) { return std::string("00-00-0000 0000hrs"); }
+};
+}  // namespace qml
+}  // namespace el
 #undef FUNCTION_DEFINER
 #endif // QMLLOGGING_H

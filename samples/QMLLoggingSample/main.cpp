@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     _START_EASYLOGGINGPP(argc, argv);
     
-    QMLLogging::registerNew();
+    el::qml::QMLLogging::registerNew();
 
     QtQuick2ApplicationViewer viewer;
     viewer.setMainQmlFile(QStringLiteral("qml/QMLLoggingSample/main.qml"));
