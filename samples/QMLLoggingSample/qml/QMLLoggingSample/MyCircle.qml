@@ -1,5 +1,6 @@
 import QtQuick 2.0
- 
+import org.easylogging.qml 1.0
+
 Rectangle {
     id: rect
     color: "yellow"
@@ -29,11 +30,13 @@ Rectangle {
             name: "YELLOW"
             PropertyChanges { target: rect; color: "yellow" }
             PropertyChanges { target: mainText; color: "red" }
+            StateChangeScript { script: Log.info("State changed to YELLOW") }
         },
         State {
             name: "RED"
             PropertyChanges { target: rect; color: "red" }
             PropertyChanges { target: mainText; color: "yellow" }
+            StateChangeScript { script: Log.info("State changed to RED") }
         }
     ]
     transitions: [
