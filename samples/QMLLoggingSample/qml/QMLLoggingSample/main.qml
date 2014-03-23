@@ -15,7 +15,6 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            var t = Log.time("test");
             if (rect == null) {
                 rect = Qt.createComponent("MyCircle.qml").createObject(parent, {x: mouseX, y: mouseY})
                 Log.info("This is info log")

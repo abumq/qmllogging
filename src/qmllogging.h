@@ -64,9 +64,6 @@ private:
     }
 public:
     FUNCTION_DEFINER(QString)
-    Q_INVOKABLE el::base::Trackable time(QString name) {
-        return el::base::Trackable(name.toStdString());
-    }
 };
 
 #undef FUNCTION_DEFINER
