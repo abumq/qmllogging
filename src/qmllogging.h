@@ -2,6 +2,8 @@
 //  QMLLogging v1.0 (development version)
 //  Single-header only, Easylogging++ extension for QML logging
 //
+//  Requires: Easylogging++ v9.59 (or higher)
+//
 //  Copyright (c) 2012 - 2014 Majid Khan
 //
 //  This library is released under the MIT Licence.
@@ -38,27 +40,30 @@ private:
     }
 public:
     // Invokable functions
-    Q_INVOKABLE inline void info(QString text) {
-        LOG(INFO) << text;
+#define FUNCTION_DEFINER(type)\
+    Q_INVOKABLE void info(type text) {\
+        LOG(INFO) << text;\
+    }\
+    Q_INVOKABLE void warning(type text) {\
+        LOG(WARNING) << text;\
+    }\
+    Q_INVOKABLE void debug(type text) {\
+        LOG(DEBUG) << text;\
+    }\
+    Q_INVOKABLE void error(type text) {\
+        LOG(ERROR) << text;\
+    }\
+    Q_INVOKABLE void fatal(type text) {\
+        LOG(FATAL) << text;\
+    }\
+    Q_INVOKABLE void trace(type text) {\
+        LOG(TRACE) << text;\
+    }\
+    Q_INVOKABLE void verbose(int vlevel, type text) {\
+        VLOG(vlevel) << text;\
     }
-    Q_INVOKABLE inline void warning(QString text) {
-        LOG(WARNING) << text;
-    }
-    Q_INVOKABLE inline void debug(QString text) {
-        LOG(DEBUG) << text;
-    }
-    Q_INVOKABLE inline void error(QString text) {
-        LOG(ERROR) << text;
-    }
-    Q_INVOKABLE inline void fatal(QString text) {
-        LOG(FATAL) << text;
-    }
-    Q_INVOKABLE inline void trace(QString text) {
-        LOG(TRACE) << text;
-    }
-    Q_INVOKABLE inline void verbose(int vlevel, QString text) {
-        VLOG(vlevel) << text;
-    }
+    
+    FUNCTION_DEFINER(QString)
 };
 
 #endif // QMLLOGGING_H
