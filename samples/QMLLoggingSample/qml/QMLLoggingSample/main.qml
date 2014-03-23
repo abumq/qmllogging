@@ -8,7 +8,7 @@ Rectangle {
     Text {
         id: mainText
         text: qsTr("Easylogging++ QMLLogging Sample")
-        font.pixelSize: 125
+        font.pixelSize: 15
         anchors.centerIn: parent
         state: "YELLOW"
     }
@@ -24,7 +24,7 @@ Rectangle {
     
     Rectangle {
         id: clickMeButton
-        x: 140
+        x: 50
         y: 20
         width: 130
         height: 30
