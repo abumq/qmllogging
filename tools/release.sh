@@ -21,7 +21,7 @@ else
   exit 1
 fi
 
-CURR_VERSION=$(grep 'QMLLogging v' $1/src/qmllogging.h | grep -o '[0-9]*.[0-9]')
+CURR_VERSION=$(grep 'QMLLogging v' $1/src/qmllogging.h | grep -o '[0-9].[0-9]')
 CURR_RELEASE_DATE=$(grep -o '[0-9][0-9]-[0-9][0-9]-201[2-9] [0-9][0-9][0-9][0-9]hrs' $1/src/qmllogging.h)
 NEW_RELEASE_DATE=$(date +"%d-%m-%Y %H%Mhrs")
 NEW_VERSION=$3

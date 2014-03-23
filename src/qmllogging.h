@@ -71,7 +71,7 @@ public:
     /// @brief Current version number
     static inline const std::string version(void) { return std::string("0.0"); }
     /// @brief Release date of current version
-    static inline const std::string releaseDate(void) { return std::string("00-00-0000 0000hrs"); }
+    static inline const std::string releaseDate(void) { return std::string("01-01-2012 0000hrs"); }
 };
 }  // namespace qml
 }  // namespace el
