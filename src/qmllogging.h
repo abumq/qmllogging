@@ -49,12 +49,19 @@
     }
 namespace el {
 namespace qml {
+class VersionInfo : el::base::StaticClass {
+public:
+    static inline int major() { return version()[0].digitValue(); }
+    static inline int minor() { return version()[2].digitValue(); }
+    static inline const QString version(void) { return QString("0.0"); }
+    static inline const QString releaseDate(void) { return QString("01-01-2012 0000hrs"); }
+};
 class QMLLogging : public QObject
 {
     Q_OBJECT
 public:
     static void registerNew(const char* contextName = "Log") {
-        qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 1, 0,
+        qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", qml::VersionInfo::major(), qml::VersionInfo::minor(),
             contextName, QMLLogging::newInstance);
     }
 private:
@@ -65,13 +72,6 @@ private:
     }
 public:
     FUNCTION_DEFINER(QString)
-};
-class VersionInfo : el::base::StaticClass {
-public:
-    /// @brief Current version number
-    static inline const std::string version(void) { return std::string("0.0"); }
-    /// @brief Release date of current version
-    static inline const std::string releaseDate(void) { return std::string("01-01-2012 0000hrs"); }
 };
 }  // namespace qml
 }  // namespace el

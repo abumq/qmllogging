@@ -43,8 +43,8 @@ fi
 
 if [ "$confirm" = "y" ]; then
   sed -i "s/QMLLogging v$CURR_VERSION*/QMLLogging v$NEW_VERSION/g" $1/src/qmllogging.h
-  sed -i "s/version(void) { return std::string(\"$CURR_VERSION\"); }/version(void) { return std\:\:string(\"$NEW_VERSION\"); }/g" $1/src/qmllogging.h
-  sed -i "s/releaseDate(void) { return std::string(\"$CURR_RELEASE_DATE\"); }/releaseDate(void) { return std\:\:string(\"$NEW_RELEASE_DATE\"); }/g" $1/src/qmllogging.h
+  sed -i "s/version(void) { return QString(\"$CURR_VERSION\"); }/version(void) { return QString(\"$NEW_VERSION\"); }/g" $1/src/qmllogging.h
+  sed -i "s/releaseDate(void) { return QString(\"$CURR_RELEASE_DATE\"); }/releaseDate(void) { return QString(\"$NEW_RELEASE_DATE\"); }/g" $1/src/qmllogging.h
   sed -i "s/ (development \/ unreleased version)//g" $1/src/qmllogging.h
   sed -i "s/\$currentVersion = \"$CURR_VERSION\"*/\$currentVersion = \"$NEW_VERSION\"/g" $2/version.php
   sed -i "s/\$releaseDate = \"$CURR_RELEASE_DATE\"*/\$releaseDate = \"$NEW_RELEASE_DATE\"/g" $2/version.php
