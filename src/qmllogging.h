@@ -23,6 +23,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QObject>
+#include <QtCode/QHash>
 
 #define _ELPP_QT_LOGGING
 #include <easylogging++.h>
@@ -59,6 +60,28 @@ public:
     static inline const QString version(void) { return QString("0.0"); }
     static inline const QString releaseDate(void) { return QString("01-01-2012 0000hrs"); }
 };
+
+class TimeTracker {
+public:
+    void time(QString blockName) {
+        m_timedBlocks.insert(blockName, el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT));
+    }
+    void timeEnd(QString blockName) {
+        QHash<QString, el::base::Trackable>::iterator = m_timedBlocks.find(blockName);
+        if (iterator != m_timedBlocks.end()) {
+            m_timedBlocks.remove(iterator);
+        }
+    }
+    void timeCheck(QString blockName, QString checkpointId) {
+        QHash<QString, el::base::Trackable>::iterator = m_timedBlocks.find(blockName);
+        if (iterator != m_timedBlocks.end()) {
+            iterator->checkpoint(checkpointId.toStdString().c_str());
+        }
+    }
+private:
+    QHash<QString, el::base::Trackable> m_timedBlocks;
+};
+
 class QMLLogging : public QObject
 {
     Q_OBJECT
@@ -68,6 +91,8 @@ public:
             contextName, QMLLogging::newInstance);
     }
 private:
+    TimeTracker m_tracker;
+
     explicit QMLLogging(QObject *parent = 0) : QObject(parent) { }
 
     static QObject* newInstance(QQmlEngine*, QJSEngine*) {
@@ -75,6 +100,16 @@ private:
     }
 public:
     FUNCTION_DEFINER(QString)
+    // Time tracker functions
+    Q_INVOKABLE inline void time(QString blockName) {
+        m_tracker.time(blockName);
+    }
+    Q_INVOKABLE inline void timeEnd(QString blockName) {
+        m_tracker.timeEnd(blockName);
+    }
+    Q_INVOKABLE inline void timeCheck(QString blockName, QString checkpointId) {
+        m_tracker.timeCheck(blockName, checkpointId);
+    }
 };
 }  // namespace qml
 }  // namespace el
