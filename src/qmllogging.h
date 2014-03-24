@@ -29,26 +29,26 @@
 #include <easylogging++.h>
 
 // Invokable log functions
-#define LOG_LEVEL_FUNCTION(type)\
-    Q_INVOKABLE inline void info(type text) {\
+#define FUNCTION_DEFINER(type)\
+    Q_INVOKABLE void info(type text) {\
         LOG(INFO) << text;\
     }\
-    Q_INVOKABLE inline void warning(type text) {\
+    Q_INVOKABLE void warning(type text) {\
         LOG(WARNING) << text;\
     }\
-    Q_INVOKABLE inline void debug(type text) {\
+    Q_INVOKABLE void debug(type text) {\
         LOG(DEBUG) << text;\
     }\
-    Q_INVOKABLE inline void error(type text) {\
+    Q_INVOKABLE void error(type text) {\
         LOG(ERROR) << text;\
     }\
-    Q_INVOKABLE inline void fatal(type text) {\
+    Q_INVOKABLE void fatal(type text) {\
         LOG(FATAL) << text;\
     }\
-    Q_INVOKABLE inline void trace(type text) {\
+    Q_INVOKABLE void trace(type text) {\
         LOG(TRACE) << text;\
     }\
-    Q_INVOKABLE inline void verbose(int vlevel, type text) {\
+    Q_INVOKABLE void verbose(int vlevel, type text) {\
         VLOG(vlevel) << text;\
     }
 namespace el {
@@ -63,7 +63,21 @@ public:
 
 class TimeTracker {
 public:
-    
+    void time(QString blockName) {
+        m_timedBlocks.insert(blockName, el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT));
+    }
+    void timeEnd(QString blockName) {
+        QHash<QString, el::base::Trackable>::iterator = m_timedBlocks.find(blockName);
+        if (iterator != m_timedBlocks.end()) {
+            m_timedBlocks.remove(iterator);
+        }
+    }
+    void timeCheck(QString blockName, QString checkpointId) {
+        QHash<QString, el::base::Trackable>::iterator = m_timedBlocks.find(blockName);
+        if (iterator != m_timedBlocks.end()) {
+            iterator->checkpoint(checkpointId.toStdString().c_str());
+        }
+    }
 private:
     QHash<QString, el::base::Trackable> m_timedBlocks;
 };
@@ -77,7 +91,7 @@ public:
             contextName, QMLLogging::newInstance);
     }
 private:
-    QHash<QString, el::base::Trackable> m_timedBlocks;
+    TimeTracker m_tracker;
     QHash<QString, int> m_counters;
 
     explicit QMLLogging(QObject *parent = 0) : QObject(parent) { }
@@ -86,25 +100,16 @@ private:
         return new QMLLogging();
     }
 public:
-    LOG_LEVEL_FUNCTION(const QString &)
+    FUNCTION_DEFINER(QString)
     // Time tracker functions
-    Q_INVOKABLE inline void time(const QString &timerName) {
-        QHash<QString, el::base::Trackable>::iterator = m_timedBlocks.find(timerName);
-        if (iterator == m_timedBlocks.end()) {
-            m_timedBlocks.insert(timerName, el::base::Trackable(timerName.toStdString(), _ELPP_MIN_UNIT));
-        }
+    Q_INVOKABLE inline void time(QString blockName) {
+        m_tracker.time(blockName);
     }
-    Q_INVOKABLE inline void timeEnd(const QString &timerName) {
-        QHash<QString, el::base::Trackable>::iterator = m_timedBlocks.find(timerName);
-        if (iterator != m_timedBlocks.end()) {
-            m_timedBlocks.remove(iterator);
-        }
+    Q_INVOKABLE inline void timeEnd(QString blockName) {
+        m_tracker.timeEnd(blockName);
     }
-    Q_INVOKABLE inline void timeCheck(const QString &timerName, QString checkpointId) {
-        QHash<QString, el::base::Trackable>::iterator = m_timedBlocks.find(timerName);
-        if (iterator != m_timedBlocks.end()) {
-            iterator->checkpoint(checkpointId.toStdString().c_str());
-        }
+    Q_INVOKABLE inline void timeCheck(QString blockName, QString checkpointId) {
+        m_tracker.timeCheck(blockName, checkpointId);
     }
     // Count functions
     Q_INVOKABLE inline void count(const QString &msg) {
@@ -125,5 +130,5 @@ public:
 };
 }  // namespace qml
 }  // namespace el
-#undef LOG_LEVEL_FUNCTION
+#undef FUNCTION_DEFINER
 #endif // QMLLOGGING_H
