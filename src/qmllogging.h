@@ -2,7 +2,9 @@
 //  QMLLogging v0.0 (development / unreleased version)
 //  Single-header only, Easylogging++ extension for QML logging
 //
-//  Requires: Easylogging++ v9.59 (or higher)
+//  Requires:
+//     * Easylogging++ v9.59 (or higher)
+//     * Qt 5.2 (or higher)
 //
 //  Copyright (c) 2012 - 2014 Majid Khan
 //
@@ -17,9 +19,10 @@
 #ifndef QMLLOGGING_H
 #define QMLLOGGING_H
 
+#include <QtQml>
+
 #include <QtCore/QString>
 #include <QtCore/QObject>
-#include <QtQml>
 
 #define _ELPP_QT_LOGGING
 #include <easylogging++.h>
