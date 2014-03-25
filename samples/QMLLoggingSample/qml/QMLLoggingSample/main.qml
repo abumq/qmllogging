@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import org.easylogging.qml 1.0
+import org.easylogging.qml 0.0
 
 Rectangle {
     width: 360
@@ -15,10 +15,13 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
+            Log.time("onClicked")
+            Log.count("test")
             if (rect == null) {
                 rect = Qt.createComponent("MyCircle.qml").createObject(parent, {x: mouseX, y: mouseY})
                 Log.info("This is info log")
             }
+            Log.timeEnd("onClicked")
         }
     }
     

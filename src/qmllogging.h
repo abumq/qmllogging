@@ -23,7 +23,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QObject>
-#include <QtCode/QHash>
+#include <QtCore/QHash>
 
 #define _ELPP_QT_LOGGING
 #include <easylogging++.h>
@@ -55,8 +55,8 @@ namespace el {
 namespace qml {
 class VersionInfo : el::base::StaticClass {
 public:
-    static inline int major() { return version()[0].digitValue(); }
-    static inline int minor() { return version()[2].digitValue(); }
+    static inline int getMajor() { return version()[0].digitValue(); }
+    static inline int getMinor() { return version()[2].digitValue(); }
     static inline const QString version(void) { return QString("0.0"); }
     static inline const QString releaseDate(void) { return QString("01-01-2012 0000hrs"); }
 };
@@ -67,13 +67,10 @@ public:
         m_timedBlocks.insert(blockName, el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT));
     }
     void timeEnd(QString blockName) {
-        QHash<QString, el::base::Trackable>::iterator = m_timedBlocks.find(blockName);
-        if (iterator != m_timedBlocks.end()) {
-            m_timedBlocks.remove(iterator);
-        }
+        m_timedBlocks.remove(blockName);
     }
     void timeCheck(QString blockName, QString checkpointId) {
-        QHash<QString, el::base::Trackable>::iterator = m_timedBlocks.find(blockName);
+        QHash<QString, el::base::Trackable>::iterator iterator = m_timedBlocks.find(blockName);
         if (iterator != m_timedBlocks.end()) {
             iterator->checkpoint(checkpointId.toStdString().c_str());
         }
@@ -87,8 +84,9 @@ class QMLLogging : public QObject
     Q_OBJECT
 public:
     static void registerNew(const char* contextName = "Log") {
-        qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", qml::VersionInfo::major(), qml::VersionInfo::minor(),
-            contextName, QMLLogging::newInstance);
+        qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 
+            qml::VersionInfo::getMajor(), qml::VersionInfo::getMinor(),
+             contextName, QMLLogging::newInstance);
     }
 private:
     TimeTracker m_tracker;
@@ -113,19 +111,14 @@ public:
     }
     // Count functions
     Q_INVOKABLE inline void count(const QString &msg) {
-        QHash<QString, int>::iterator = m_counters.find(msg);
+        QHash<QString, int>::iterator iterator = m_counters.find(msg);
         if (iterator == m_counters.end()) {
-            m_counters.insert(msg, 0);
-        } else {
-           (*iterator)++
+            iterator = m_counters.insert(msg, 0);
         }
-        LOG(INFO) << msg << " {* " << (*iterator) << "}";
+        LOG(INFO) << msg << " {* " << (++*iterator) << "}";
     }
     Q_INVOKABLE inline void countEnd(const QString &msg) {
-        QHash<QString, int>::iterator = m_counters.find(msg);
-        if (iterator != m_counters.end()) {
-            m_counters.remove(iterator);
-        }
+        m_counters.remove(msg);
     }
 };
 }  // namespace qml
