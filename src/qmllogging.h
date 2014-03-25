@@ -69,7 +69,7 @@ public:
     void timeEnd(QString blockName) {
         m_timedBlocks.remove(blockName);
     }
-    void timeCheck(QString blockName, QString checkpointId) {
+    void timeCheck(QString blockName, QString checkpointId = QString()) {
         QHash<QString, el::base::Trackable>::iterator iterator = m_timedBlocks.find(blockName);
         if (iterator != m_timedBlocks.end()) {
             iterator->checkpoint(checkpointId.toStdString().c_str());
@@ -86,7 +86,7 @@ public:
     static void registerNew(const char* contextName = "Log") {
         qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 
             qml::VersionInfo::getMajor(), qml::VersionInfo::getMinor(),
-             contextName, QMLLogging::newInstance);
+                contextName, QMLLogging::newInstance);
     }
 private:
     TimeTracker m_tracker;
