@@ -3,8 +3,8 @@
 //  Single-header only, Easylogging++ extension for QML logging
 //
 //  Requires:
-//     * Easylogging++ v9.59 (or higher)
-//     * Qt 5.2 (or higher)
+//     * Easylogging++ v9.60 (or higher)
+//     * Qt Quick 2.0 (or higher)
 //
 //  Copyright (c) 2012 - 2014 Majid Khan
 //
@@ -31,25 +31,25 @@
 // Invokable log functions
 #define FUNCTION_DEFINER(type)\
     Q_INVOKABLE void info(type text) {\
-        LOG(INFO) << text;\
+        if (!m_hasError) m_logger->info(text);\
     }\
     Q_INVOKABLE void warning(type text) {\
-        LOG(WARNING) << text;\
+        if (!m_hasError) m_logger->warn(text);\
     }\
     Q_INVOKABLE void debug(type text) {\
-        LOG(DEBUG) << text;\
+        if (!m_hasError) m_logger->debug(text);\
     }\
     Q_INVOKABLE void error(type text) {\
-        LOG(ERROR) << text;\
+        if (!m_hasError) m_logger->error(text);\
     }\
     Q_INVOKABLE void fatal(type text) {\
-        LOG(FATAL) << text;\
+        if (!m_hasError) m_logger->fatal(text);\
     }\
     Q_INVOKABLE void trace(type text) {\
-        LOG(TRACE) << text;\
+        if (!m_hasError) m_logger->trace(text);\
     }\
     Q_INVOKABLE void verbose(int vlevel, type text) {\
-        VLOG(vlevel) << text;\
+        if (!m_hasError) m_logger->verbose(vlevel, text);\
     }
 namespace el {
 namespace qml {
@@ -88,11 +88,25 @@ public:
             qml::VersionInfo::getMajor(), qml::VersionInfo::getMinor(),
                 contextName, QMLLogging::newInstance);
     }
+    
+    bool hasError(void) const { return m_hasError; }
+    QString errorString(void) const { return m_errorString; }
 private:
+    el::Logger* m_logger;
     TimeTracker m_tracker;
     QHash<QString, int> m_counters;
+    bool m_hasError;
+    QString m_errorString;
 
-    explicit QMLLogging(QObject *parent = 0) : QObject(parent) { }
+    explicit QMLLogging(const char* loggerId = el::base::consts::kDefaultLoggerId,
+        QObject *parent = 0) : QObject(parent),
+            m_hasError(false), m_errorString(QString()) {
+        m_logger = el::Loggers::getLogger(loggerId);
+        if (m_logger == nullptr) {
+            m_hasError = true;
+            m_errorString = QString("Unable to find or register logger: [" + QString(loggerId) + "]");
+        }
+    }
 
     static QObject* newInstance(QQmlEngine*, QJSEngine*) {
         return new QMLLogging();

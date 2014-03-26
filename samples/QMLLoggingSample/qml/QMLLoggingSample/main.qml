@@ -4,6 +4,8 @@ import org.easylogging.qml 0.0
 Rectangle {
     width: 360
     height: 360
+    border.color: "#ff0000"
+    border.width: 3
     property Rectangle rect: null
     Text {
         id: mainText
@@ -16,10 +18,10 @@ Rectangle {
         anchors.fill: parent
         onClicked: {
             Log.time("onClicked")
-            Log.count("test")
+            Log.count("onClicked times: ")
             if (rect == null) {
                 rect = Qt.createComponent("MyCircle.qml").createObject(parent, {x: mouseX, y: mouseY})
-                Log.info("This is info log")
+                Log.info("This is " + rect)
             }
             Log.timeEnd("onClicked")
         }
@@ -45,6 +47,7 @@ Rectangle {
             function toggleState() {
                 if (rect == null) {
                     Log.error("Please click area first")
+                    return;
                 }
                 if (rect.state == "YELLOW")
                     rect.state = "RED"
