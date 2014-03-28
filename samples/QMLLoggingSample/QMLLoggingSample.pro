@@ -12,7 +12,7 @@ QMAKE_CXXFLAGS += -std=c++11
 SOURCES += main.cpp
 
 HEADERS += \
-    logging/qmllogging.h
+    ../../src/qmllogging.h
 
 # Installation path
 # target.path =
