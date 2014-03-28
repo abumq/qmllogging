@@ -129,7 +129,7 @@ public:
         if (iterator == m_counters.end()) {
             iterator = m_counters.insert(msg, 0);
         }
-        LOG(INFO) << msg << " {* " << (++*iterator) << "}";
+        LOG(INFO) << msg << " {" << (++*iterator) << "}";
     }
     Q_INVOKABLE inline void countEnd(const QString &msg) {
         m_counters.remove(msg);
