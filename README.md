@@ -1,7 +1,7 @@
 QML Logging
 ===========
 
-Easylogging++ extension for QML logging
+Easylogging++ wrapper for QML logging
 
                                        ‫بسم الله الرَّحْمَنِ الرَّحِيمِ
 
@@ -10,7 +10,7 @@ Easylogging++ extension for QML logging
 
 ### Quick Links
 
-  [![download] Download Latest](http://easylogging.org/latest.zip)
+  [![download] Download Latest](http://qml.easylogging.org/latest.zip)
   
   [![www] Project Homepage](http://qml.easylogging.org/)
 
