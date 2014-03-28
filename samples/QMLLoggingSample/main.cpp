@@ -2,7 +2,7 @@
 #include "qtquick2applicationviewer.h"
 #include "../../src/qmllogging.h"
 
-_INITIALIZE_EASYLOGGINGPP
+_INITIALIZE_QMLLOGGING
 
 int main(int argc, char *argv[])
 {

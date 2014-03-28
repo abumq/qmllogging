@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import org.easylogging.qml 0.0
+import org.easylogging.qml 1.0
 
 Rectangle {
     width: 360

@@ -6,7 +6,7 @@ Easylogging++ extension for QML logging
                                        ‫بسم الله الرَّحْمَنِ الرَّحِيمِ
 
 
-> **Manual For v0.0**
+> **Manual For v1.0**
 
 ### Quick Links
 

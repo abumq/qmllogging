@@ -1,20 +1,19 @@
 //
-//  QMLLogging v0.0 (development / unreleased version)
-//  Single-header only, Easylogging++ extension for QML logging
+//  QMLLogging v0.0
+//  Single-header only, Easylogging++ wrapper for QML logging
 //
 //  Requires:
 //     * Easylogging++ v9.62 (or higher)
 //     * Qt Quick 2.0 (or higher)
 //
-//  Copyright (c) 2012 - 2014 Majid Khan
+//  Copyright (c) 2014 Majid Khan
 //
 //  This library is released under the MIT Licence.
 //  http://www.easylogging.org/licence.php
 //
 //  support@easylogging.org
-//  http://easylogging.org
+//  http://qml.easylogging.org
 //  https://github.com/easylogging/qmllogging
-//  https://github.com/easylogging/easyloggingpp
 //
 #ifndef QMLLOGGING_H
 #define QMLLOGGING_H
@@ -30,47 +29,6 @@
 
 namespace el {
 namespace qml {
-class VersionInfo : el::base::StaticClass {
-public:
-    static inline int getMajor() { return version()[0].digitValue(); }
-    static inline int getMinor() { return version()[2].digitValue(); }
-    static inline const QString version(void) { return QString("0.0"); }
-    static inline const QString releaseDate(void) { return QString("01-01-2012 0000hrs"); }
-};
-
-class TimeTracker : el::base::NoCopy {
-public:
-    typedef QHash<QString, el::base::Trackable*> HashMap;
-    
-    virtual ~TimeTracker(void) {
-        QList<HashMap::key_type>::iterator key = m_timedBlocks.keys().begin();
-        for (; key != m_timedBlocks.keys().end(); ++key) {
-            delete m_timedBlocks.take(*key);
-        }
-        m_timedBlocks.clear();
-    }
-    
-    void timeBegin(const QString &blockName) {
-        // Why on heap? T is destroyed after insertion, and we don't want this to happen
-        // otherwise unnecessary check occurs 
-        m_timedBlocks.insert(blockName, 
-                             new el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT,
-                                                        el::base::consts::kDefaultLoggerId));
-    }
-    void timeEnd(const QString &blockName) {
-        el::base::Trackable* trackable = m_timedBlocks.take(blockName);
-        delete trackable;
-    }
-    void timeCheck(const QString &blockName, QString checkpointId = QString()) {
-        typename HashMap::iterator iterator = m_timedBlocks.find(blockName);
-        if (iterator != m_timedBlocks.end()) {
-            (*iterator)->checkpoint(checkpointId.toStdString().c_str());
-        }
-    }
-private:
-    HashMap m_timedBlocks;
-};
-
 #define LogT const QString&
 #define FUNCTION_DEFINER(FN_NAME)\
 Q_INVOKABLE void FN_NAME(LogT t) \
@@ -115,6 +73,55 @@ Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5,
 Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8, LogT t9, LogT t10) {\
         if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10);}\
 
+class VersionInfo : el::base::StaticClass {
+public:
+    static inline int getMajor() { return version()[0].digitValue(); }
+    static inline int getMinor() { return version()[2].digitValue(); }
+    static inline const QString version(void) { return QString("0.0"); }
+    static inline const QString releaseDate(void) { return QString("01-01-2012 0000hrs"); }
+};
+
+class TimeTracker : el::base::NoCopy {
+public:
+    typedef QHash<QString, el::base::Trackable*> HashMap;
+    
+    virtual ~TimeTracker(void) {
+        QList<HashMap::key_type>::iterator key = m_timedBlocks.keys().begin();
+        for (; key != m_timedBlocks.keys().end(); ++key) {
+            delete m_timedBlocks.take(*key);
+        }
+        m_timedBlocks.clear();
+    }
+    
+    void setLoggerId(const std::string& loggerId) {
+        m_loggerId = loggerId;
+    }
+
+    void timeBegin(const QString &blockName) {
+        if (m_loggerId.empty()) {
+            ELPP_INTERNAL_ERROR("Set loggerID first!", false);
+            return;
+        }
+        // Why on heap? T is destroyed after insertion, and we don't want this to happen
+        // otherwise unnecessary check occurs 
+        m_timedBlocks.insert(blockName, 
+                             new el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT,
+                                                        m_loggerId));
+    }
+    void timeEnd(const QString &blockName) {
+        el::base::Trackable* trackable = m_timedBlocks.take(blockName);
+        delete trackable;
+    }
+    void timeCheck(const QString &blockName, QString checkpointId = QString()) {
+        typename HashMap::iterator iterator = m_timedBlocks.find(blockName);
+        if (iterator != m_timedBlocks.end()) {
+            (*iterator)->checkpoint(checkpointId.toStdString().c_str());
+        }
+    }
+private:
+    std::string m_loggerId;
+    HashMap m_timedBlocks;
+};
 class QMLLogging : public QObject
 {
     Q_OBJECT
@@ -138,6 +145,7 @@ private:
                         QObject *parent = 0) : QObject(parent),
         m_hasError(false), m_errorString(QString()) {
         m_logger = el::Loggers::getLogger(loggerId);
+        m_tracker.setLoggerId(loggerId);
         if (m_logger == nullptr) {
             m_hasError = true;
             m_errorString = QString("Unable to find or register logger: [" + QString(loggerId) + "]");
@@ -187,4 +195,5 @@ public:
 }  // namespace el
 #undef FUNCTION_DEFINER
 #undef LogT
+#define _INITIALIZE_QMLLOGGING _INITIALIZE_EASYLOGGINGPP
 #endif // QMLLOGGING_H
