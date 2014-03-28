@@ -28,6 +28,8 @@
 #define _ELPP_QT_LOGGING
 #include <easylogging++.h>
 
+class CallContext;
+
 namespace el {
 namespace qml {
 class VersionInfo : el::base::StaticClass {
@@ -49,12 +51,12 @@ public:
         }
         m_timedBlocks.clear();
     }
-
+    
     void timeBegin(const QString &blockName) {
         // Why on heap? T is destroyed after insertion, and we don't want this to happen
         // otherwise unnecessary check occurs 
         m_timedBlocks.insert(blockName, 
-            new el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT));
+                             new el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT));
     }
     void timeEnd(const QString &blockName) {
         el::base::Trackable* trackable = m_timedBlocks.take(blockName);
@@ -76,8 +78,8 @@ class QMLLogging : public QObject
 public:
     static void registerNew(const char* contextName = "Log") {
         qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 
-            qml::VersionInfo::getMajor(), qml::VersionInfo::getMinor(),
-                contextName, QMLLogging::newInstance);
+                                             qml::VersionInfo::getMajor(), qml::VersionInfo::getMinor(),
+                                             contextName, QMLLogging::newInstance);
     }
     
     bool hasError(void) const { return m_hasError; }
@@ -88,17 +90,17 @@ private:
     QHash<QString, int> m_counters;
     bool m_hasError;
     QString m_errorString;
-
+    
     explicit QMLLogging(const char* loggerId = el::base::consts::kDefaultLoggerId,
-        QObject *parent = 0) : QObject(parent),
-            m_hasError(false), m_errorString(QString()) {
+                        QObject *parent = 0) : QObject(parent),
+        m_hasError(false), m_errorString(QString()) {
         m_logger = el::Loggers::getLogger(loggerId);
         if (m_logger == nullptr) {
             m_hasError = true;
             m_errorString = QString("Unable to find or register logger: [" + QString(loggerId) + "]");
         }
     }
-
+    
     static QObject* newInstance(QQmlEngine*, QJSEngine*) {
         return new QMLLogging();
     }
@@ -141,16 +143,18 @@ public:
     Q_INVOKABLE inline void timeCheck(const QString &blockName, const QString &checkpointId) {
         m_tracker.timeCheck(blockName, checkpointId);
     }
-
+    
     // Count functions
     Q_INVOKABLE inline void count(const QString &msg) {
-        QHash<QString, int>::iterator iterator = m_counters.find(msg);
-        if (iterator == m_counters.end()) {
-            iterator = m_counters.insert(msg, 0);
+        if (!m_hasError) {
+            QHash<QString, int>::iterator iterator = m_counters.find(msg);
+            if (iterator == m_counters.end()) {
+                iterator = m_counters.insert(msg, 0);
+            }
+            m_logger->info("% {%}", msg, ++*iterator);
         }
-        LOG(INFO) << msg << " {" << (++*iterator) << "}";
     }
-
+    
     Q_INVOKABLE inline void countEnd(const QString &msg) {
         m_counters.remove(msg);
     }

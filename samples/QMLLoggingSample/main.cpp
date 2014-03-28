@@ -1,6 +1,6 @@
 #include <QtGui/QGuiApplication>
 #include "qtquick2applicationviewer.h"
-#include "logging/qmllogging.h"
+#include "../../src/qmllogging.h"
 
 _INITIALIZE_EASYLOGGINGPP
 
