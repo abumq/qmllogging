@@ -21,7 +21,9 @@ Rectangle {
             Log.count("onClicked times")
             if (rect == null) {
                 rect = Qt.createComponent("MyCircle.qml").createObject(parent, {x: mouseX, y: mouseY})
-                Log.info("This is " + rect)
+                Log.info("1. This is " + rect)
+                Log.info("2. This is ", rect)
+                Log.verbose(2, "This is verbose")
             }
             Log.timeEnd("onClicked")
         }

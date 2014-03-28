@@ -3,7 +3,7 @@
 //  Single-header only, Easylogging++ extension for QML logging
 //
 //  Requires:
-//     * Easylogging++ v9.60 (or higher)
+//     * Easylogging++ v9.62 (or higher)
 //     * Qt Quick 2.0 (or higher)
 //
 //  Copyright (c) 2012 - 2014 Majid Khan
@@ -28,8 +28,6 @@
 #define _ELPP_QT_LOGGING
 #include <easylogging++.h>
 
-class CallContext;
-
 namespace el {
 namespace qml {
 class VersionInfo : el::base::StaticClass {
@@ -45,7 +43,7 @@ public:
     typedef QHash<QString, el::base::Trackable*> HashMap;
     
     virtual ~TimeTracker(void) {
-        QList<QString>::iterator key = m_timedBlocks.keys().begin();
+        QList<HashMap::key_type>::iterator key = m_timedBlocks.keys().begin();
         for (; key != m_timedBlocks.keys().end(); ++key) {
             delete m_timedBlocks.take(*key);
         }
@@ -56,7 +54,8 @@ public:
         // Why on heap? T is destroyed after insertion, and we don't want this to happen
         // otherwise unnecessary check occurs 
         m_timedBlocks.insert(blockName, 
-                             new el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT));
+                             new el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT,
+                                                        el::base::consts::kDefaultLoggerId));
     }
     void timeEnd(const QString &blockName) {
         el::base::Trackable* trackable = m_timedBlocks.take(blockName);
@@ -71,6 +70,50 @@ public:
 private:
     HashMap m_timedBlocks;
 };
+
+#define LogT const QString&
+#define FUNCTION_DEFINER(FN_NAME)\
+Q_INVOKABLE void FN_NAME(LogT t) \
+        {if (!m_hasError) m_logger->FN_NAME(t);}\
+Q_INVOKABLE void FN_NAME(LogT t, LogT t2) \
+        {if (!m_hasError) m_logger->FN_NAME("%v%v", t, t2);}\
+Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3) \
+        {if (!m_hasError) m_logger->FN_NAME("%v%v%v", t, t2, t3);}\
+Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4) \
+        {if (!m_hasError) m_logger->FN_NAME("%v%v%v%v", t, t2, t3, t4);}\
+Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5) {\
+        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v", t, t2, t3, t4, t5);}\
+Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6) {\
+        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v", t, t2, t3, t4, t5, t6);}\
+Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7) {\
+        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7);}\
+Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8) {\
+        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8);}\
+Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8, LogT t9) {\
+        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9);}\
+Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8, LogT t9, LogT t10) {\
+        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10);}
+#define FUNCTION_DEFINER_V(FN_NAME)\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t) \
+        {if (!m_hasError) m_logger->verbose(vlevel, t);}\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2) \
+        {if (!m_hasError) m_logger->verbose(vlevel, "%v%v", t, t2);}\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3) \
+        {if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v", t, t2, t3);}\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4) \
+        {if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v", t, t2, t3, t4);}\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5) {\
+        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v", t, t2, t3, t4, t5);}\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6) {\
+        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v", t, t2, t3, t4, t5, t6);}\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7) {\
+        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7);}\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8) {\
+        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8);}\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8, LogT t9) {\
+        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9);}\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8, LogT t9, LogT t10) {\
+        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10);}\
 
 class QMLLogging : public QObject
 {
@@ -105,33 +148,14 @@ private:
         return new QMLLogging();
     }
 public:
-    Q_INVOKABLE void info(const QString &text) {
-        if (!m_hasError) m_logger->info(text);
-    }
     
-    Q_INVOKABLE void warning(const QString &text) {
-        if (!m_hasError) m_logger->warn(text);
-    }
-    
-    Q_INVOKABLE void debug(const QString &text) {
-        if (!m_hasError) m_logger->debug(text);
-    }
-    
-    Q_INVOKABLE void error(const QString &text) {
-        if (!m_hasError) m_logger->error(text);
-    }
-    
-    Q_INVOKABLE void fatal(const QString &text) {\
-        if (!m_hasError) m_logger->fatal(text);
-    }
-    
-    Q_INVOKABLE void trace(const QString &text) {
-        if (!m_hasError) m_logger->trace(text);
-    }
-    
-    Q_INVOKABLE void verbose(int vlevel, const QString &text) {
-        if (!m_hasError) m_logger->verbose(vlevel, text);
-    }
+    FUNCTION_DEFINER(info)
+    FUNCTION_DEFINER(warn)
+    FUNCTION_DEFINER(debug)
+    FUNCTION_DEFINER(error)
+    FUNCTION_DEFINER(fatal)
+    FUNCTION_DEFINER(trace)
+    FUNCTION_DEFINER_V(verbose)
     
     // Time tracker functions
     Q_INVOKABLE inline void timeBegin(const QString &blockName) {
@@ -151,7 +175,7 @@ public:
             if (iterator == m_counters.end()) {
                 iterator = m_counters.insert(msg, 0);
             }
-            m_logger->info("% {%}", msg, ++*iterator);
+            m_logger->info("%v {%v}", msg, ++*iterator);
         }
     }
     
@@ -162,4 +186,5 @@ public:
 }  // namespace qml
 }  // namespace el
 #undef FUNCTION_DEFINER
+#undef LogT
 #endif // QMLLOGGING_H
