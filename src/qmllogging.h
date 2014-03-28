@@ -28,29 +28,6 @@
 #define _ELPP_QT_LOGGING
 #include <easylogging++.h>
 
-// Invokable log functions
-#define FUNCTION_DEFINER(type)\
-    Q_INVOKABLE void info(type text) {\
-        if (!m_hasError) m_logger->info(text);\
-    }\
-    Q_INVOKABLE void warning(type text) {\
-        if (!m_hasError) m_logger->warn(text);\
-    }\
-    Q_INVOKABLE void debug(type text) {\
-        if (!m_hasError) m_logger->debug(text);\
-    }\
-    Q_INVOKABLE void error(type text) {\
-        if (!m_hasError) m_logger->error(text);\
-    }\
-    Q_INVOKABLE void fatal(type text) {\
-        if (!m_hasError) m_logger->fatal(text);\
-    }\
-    Q_INVOKABLE void trace(type text) {\
-        if (!m_hasError) m_logger->trace(text);\
-    }\
-    Q_INVOKABLE void verbose(int vlevel, type text) {\
-        if (!m_hasError) m_logger->verbose(vlevel, text);\
-    }
 namespace el {
 namespace qml {
 class VersionInfo : el::base::StaticClass {
@@ -61,22 +38,36 @@ public:
     static inline const QString releaseDate(void) { return QString("01-01-2012 0000hrs"); }
 };
 
-class TimeTracker {
+class TimeTracker : el::base::NoCopy {
 public:
-    void time(QString blockName) {
-        m_timedBlocks.insert(blockName, el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT));
+    typedef QHash<QString, el::base::Trackable*> HashMap;
+    
+    virtual ~TimeTracker(void) {
+        QList<QString>::iterator key = m_timedBlocks.keys().begin();
+        for (; key != m_timedBlocks.keys().end(); ++key) {
+            delete m_timedBlocks.take(*key);
+        }
+        m_timedBlocks.clear();
     }
-    void timeEnd(QString blockName) {
-        m_timedBlocks.remove(blockName);
+
+    void timeBegin(const QString &blockName) {
+        // Why on heap? T is destroyed after insertion, and we don't want this to happen
+        // otherwise unnecessary check occurs 
+        m_timedBlocks.insert(blockName, 
+            new el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT));
     }
-    void timeCheck(QString blockName, QString checkpointId = QString()) {
-        QHash<QString, el::base::Trackable>::iterator iterator = m_timedBlocks.find(blockName);
+    void timeEnd(const QString &blockName) {
+        el::base::Trackable* trackable = m_timedBlocks.take(blockName);
+        delete trackable;
+    }
+    void timeCheck(const QString &blockName, QString checkpointId = QString()) {
+        typename HashMap::iterator iterator = m_timedBlocks.find(blockName);
         if (iterator != m_timedBlocks.end()) {
-            iterator->checkpoint(checkpointId.toStdString().c_str());
+            (*iterator)->checkpoint(checkpointId.toStdString().c_str());
         }
     }
 private:
-    QHash<QString, el::base::Trackable> m_timedBlocks;
+    HashMap m_timedBlocks;
 };
 
 class QMLLogging : public QObject
@@ -112,17 +103,45 @@ private:
         return new QMLLogging();
     }
 public:
-    FUNCTION_DEFINER(QString)
-    // Time tracker functions
-    Q_INVOKABLE inline void time(QString blockName) {
-        m_tracker.time(blockName);
+    Q_INVOKABLE void info(const QString &text) {
+        if (!m_hasError) m_logger->info(text);
     }
-    Q_INVOKABLE inline void timeEnd(QString blockName) {
+    
+    Q_INVOKABLE void warning(const QString &text) {
+        if (!m_hasError) m_logger->warn(text);
+    }
+    
+    Q_INVOKABLE void debug(const QString &text) {
+        if (!m_hasError) m_logger->debug(text);
+    }
+    
+    Q_INVOKABLE void error(const QString &text) {
+        if (!m_hasError) m_logger->error(text);
+    }
+    
+    Q_INVOKABLE void fatal(const QString &text) {\
+        if (!m_hasError) m_logger->fatal(text);
+    }
+    
+    Q_INVOKABLE void trace(const QString &text) {
+        if (!m_hasError) m_logger->trace(text);
+    }
+    
+    Q_INVOKABLE void verbose(int vlevel, const QString &text) {
+        if (!m_hasError) m_logger->verbose(vlevel, text);
+    }
+    
+    // Time tracker functions
+    Q_INVOKABLE inline void timeBegin(const QString &blockName) {
+        m_tracker.timeBegin(blockName);
+    }
+    Q_INVOKABLE inline void timeEnd(const QString &blockName) {
         m_tracker.timeEnd(blockName);
     }
-    Q_INVOKABLE inline void timeCheck(QString blockName, QString checkpointId) {
+    Q_INVOKABLE inline void timeCheck(const QString &blockName, const QString &checkpointId) {
         m_tracker.timeCheck(blockName, checkpointId);
     }
+
     // Count functions
     Q_INVOKABLE inline void count(const QString &msg) {
         QHash<QString, int>::iterator iterator = m_counters.find(msg);
@@ -131,6 +150,7 @@ public:
         }
         LOG(INFO) << msg << " {" << (++*iterator) << "}";
     }
+
     Q_INVOKABLE inline void countEnd(const QString &msg) {
         m_counters.remove(msg);
     }
