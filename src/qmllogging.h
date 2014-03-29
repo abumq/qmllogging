@@ -86,9 +86,9 @@ public:
     typedef QHash<QString, el::base::Trackable*> HashMap;
     
     virtual ~TimeTracker(void) {
-        QList<HashMap::key_type>::iterator key = m_timedBlocks.keys().begin();
-        for (; key != m_timedBlocks.keys().end(); ++key) {
-            delete m_timedBlocks.take(*key);
+        for (const HashMap::key_type& key : m_timedBlocks.keys()) {
+            el::base::Trackable* trackable = m_timedBlocks.take(key);
+            el::base::utils::safeDelete(trackable);
         }
         m_timedBlocks.clear();
     }
@@ -97,7 +97,7 @@ public:
         m_loggerId = loggerId;
     }
 
-    void timeBegin(const QString &blockName) {
+    void timeBegin(const HashMap::key_type& blockName) {
         if (m_loggerId.empty()) {
             ELPP_INTERNAL_ERROR("Set loggerID first!", false);
             return;
@@ -108,11 +108,13 @@ public:
                              new el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT,
                                                         m_loggerId));
     }
-    void timeEnd(const QString &blockName) {
-        el::base::Trackable* trackable = m_timedBlocks.take(blockName);
-        delete trackable;
+    void timeEnd(const HashMap::key_type& blockName) {
+        if (m_timedBlocks.contains(blockName)) {
+            el::base::Trackable* trackable = m_timedBlocks.take(blockName);
+            el::base::utils::safeDelete(trackable);
+        }
     }
-    void timeCheck(const QString &blockName, QString checkpointId = QString()) {
+    void timeCheck(const HashMap::key_type& blockName, QString checkpointId = QString()) {
         typename HashMap::iterator iterator = m_timedBlocks.find(blockName);
         if (iterator != m_timedBlocks.end()) {
             (*iterator)->checkpoint(checkpointId.toStdString().c_str());
