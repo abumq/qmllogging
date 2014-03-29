@@ -1,9 +1,9 @@
 //
-//  QMLLogging v1.0
+//  QMLLogging v1.0 (development / unreleased version)
 //  Single-header only, Easylogging++ wrapper for QML logging
 //
 //  Requires:
-//     * Easylogging++ v9.62 (or higher)
+//     * Easylogging++ v9.63 (or higher)
 //     * Qt Quick 2.0 (or higher)
 //
 //  Copyright (c) 2014 Majid Khan
