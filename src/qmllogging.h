@@ -168,18 +168,18 @@ public:
     FUNCTION_DEFINER_V(verbose)
     
     // Time tracker functions
-    Q_INVOKABLE inline void timeBegin(const QString &blockName) {
+    Q_INVOKABLE inline void timeBegin(const QString& blockName) {
         m_tracker.timeBegin(blockName);
     }
-    Q_INVOKABLE inline void timeEnd(const QString &blockName) {
+    Q_INVOKABLE inline void timeEnd(const QString& blockName) {
         m_tracker.timeEnd(blockName);
     }
-    Q_INVOKABLE inline void timeCheck(const QString &blockName, const QString &checkpointId) {
+    Q_INVOKABLE inline void timeCheck(const QString& blockName, const QString& checkpointId = QString()) {
         m_tracker.timeCheck(blockName, checkpointId);
     }
     
     // Count functions
-    Q_INVOKABLE inline void count(const QString &msg) {
+    Q_INVOKABLE inline void count(const QString& msg) {
         if (!m_hasError) {
             QHash<QString, int>::iterator iterator = m_counters.find(msg);
             if (iterator == m_counters.end()) {
@@ -189,7 +189,7 @@ public:
         }
     }
     
-    Q_INVOKABLE inline void countEnd(const QString &msg) {
+    Q_INVOKABLE inline void countEnd(const QString& msg) {
         m_counters.remove(msg);
     }
 
