@@ -3,7 +3,7 @@
 //  Single-header only, Easylogging++ wrapper for QML logging
 //
 //  Requires:
-//     * Easylogging++ v9.63 (or higher)
+//     * Easylogging++ v9.64 (or higher)
 //     * Qt Quick 2.0 (or higher)
 //
 //  Copyright (c) 2014 Majid Khan
