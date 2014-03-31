@@ -18,10 +18,9 @@ Rectangle {
         }
         onPositionChanged: {
             if (mouse.buttons & Qt.LeftButton) {
-                rect.x -= (x - mouse.x); rect.y -= (y - mouse.y)
-            }
-            if (mouse.buttons &  Qt.RightButton) {
-                rect.width = Math.abs(x - mouseX); rect.height = Math.abs(y - mouseY)
+                rect.x -= (x - mouse.x)
+                rect.y -= (y - mouse.y)
+                Log.info("Moving circle: ", rect.x, " x ", rect.y)
             }
         }
     }

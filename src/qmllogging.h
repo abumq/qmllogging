@@ -19,6 +19,7 @@
 #define QMLLOGGING_H
 
 #include <QtQml>
+#include <QQmlDebuggingEnabler>
 
 #include <QtCore/QString>
 #include <QtCore/QObject>
@@ -29,49 +30,19 @@
 
 namespace el {
 namespace qml {
-#define LogT const QString&
+#define LogStrT QString
+#define LogT const LogStrT&
+
 #define FUNCTION_DEFINER(FN_NAME)\
-Q_INVOKABLE void FN_NAME(LogT t) \
-        {if (!m_hasError) m_logger->FN_NAME(t);}\
-Q_INVOKABLE void FN_NAME(LogT t, LogT t2) \
-        {if (!m_hasError) m_logger->FN_NAME("%v%v", t, t2);}\
-Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3) \
-        {if (!m_hasError) m_logger->FN_NAME("%v%v%v", t, t2, t3);}\
-Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4) \
-        {if (!m_hasError) m_logger->FN_NAME("%v%v%v%v", t, t2, t3, t4);}\
-Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5) {\
-        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v", t, t2, t3, t4, t5);}\
-Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6) {\
-        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v", t, t2, t3, t4, t5, t6);}\
-Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7) {\
-        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7);}\
-Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8) {\
-        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8);}\
-Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8, LogT t9) {\
-        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9);}\
-Q_INVOKABLE void FN_NAME(LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8, LogT t9, LogT t10) {\
-        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10);}
+Q_INVOKABLE void FN_NAME(LogT t, LogT t2 = LogStrT(), LogT t3 = LogStrT(), LogT t4 = LogStrT(),\
+        LogT t5 = LogStrT(), LogT t6 = LogStrT(), LogT t7 = LogStrT(), LogT t8 = LogStrT(),\
+        LogT t9 = LogStrT(), LogT t10 = LogStrT(), LogT t11 = LogStrT(), LogT t12 = LogStrT()) {\
+        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);}
 #define FUNCTION_DEFINER_V(FN_NAME)\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t) \
-        {if (!m_hasError) m_logger->verbose(vlevel, t);}\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2) \
-        {if (!m_hasError) m_logger->verbose(vlevel, "%v%v", t, t2);}\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3) \
-        {if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v", t, t2, t3);}\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4) \
-        {if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v", t, t2, t3, t4);}\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5) {\
-        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v", t, t2, t3, t4, t5);}\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6) {\
-        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v", t, t2, t3, t4, t5, t6);}\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7) {\
-        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7);}\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8) {\
-        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8);}\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8, LogT t9) {\
-        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9);}\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2, LogT t3, LogT t4, LogT t5, LogT t6, LogT t7, LogT t8, LogT t9, LogT t10) {\
-        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10);}\
+Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2 = LogStrT(), LogT t3 = LogStrT(), LogT t4 = LogStrT(),\
+        LogT t5 = LogStrT(), LogT t6 = LogStrT(), LogT t7 = LogStrT(), LogT t8 = LogStrT(),\
+        LogT t9 = LogStrT(), LogT t10 = LogStrT(), LogT t11 = LogStrT(), LogT t12 = LogStrT()) {\
+        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);}\
 
 class VersionInfo : el::base::StaticClass {
 public:
@@ -83,11 +54,12 @@ public:
 
 class TimeTracker : el::base::NoCopy {
 public:
-    typedef QHash<QString, el::base::Trackable*> HashMap;
+    typedef el::base::PerformanceTracker Tracker;
+    typedef QHash<QString, Tracker*> HashMap;
     
     virtual ~TimeTracker(void) {
         for (const HashMap::key_type& key : m_timedBlocks.keys()) {
-            el::base::Trackable* trackable = m_timedBlocks.take(key);
+            Tracker* trackable = m_timedBlocks.take(key);
             el::base::utils::safeDelete(trackable);
         }
         m_timedBlocks.clear();
@@ -105,12 +77,12 @@ public:
         // Why on heap? T is destroyed after insertion, and we don't want this to happen
         // otherwise unnecessary check occurs 
         m_timedBlocks.insert(blockName, 
-                             new el::base::Trackable(blockName.toStdString(), _ELPP_MIN_UNIT,
+                             new Tracker(blockName.toStdString(), _ELPP_MIN_UNIT,
                                                         m_loggerId));
     }
     void timeEnd(const HashMap::key_type& blockName) {
         if (m_timedBlocks.contains(blockName)) {
-            el::base::Trackable* trackable = m_timedBlocks.take(blockName);
+            Tracker* trackable = m_timedBlocks.take(blockName);
             el::base::utils::safeDelete(trackable);
         }
     }
@@ -174,7 +146,8 @@ public:
     Q_INVOKABLE inline void timeEnd(const QString& blockName) {
         m_tracker.timeEnd(blockName);
     }
-    Q_INVOKABLE inline void timeCheck(const QString& blockName, const QString& checkpointId = QString()) {
+    Q_INVOKABLE inline void timeCheck(const QString& blockName, 
+            const QString& checkpointId = QString()) {
         m_tracker.timeCheck(blockName, checkpointId);
     }
     
