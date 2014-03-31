@@ -192,6 +192,13 @@ public:
     Q_INVOKABLE inline void countEnd(const QString &msg) {
         m_counters.remove(msg);
     }
+
+    // Assertion functions
+    Q_INVOKABLE inline void assert(bool condition, const QString& msg) {
+        if (_ELPP_DEBUG_LOG && !condition) {
+            m_logger->fatal("Check failed: [%v] ", msg);
+        }
+    }
 };
 }  // namespace qml
 }  // namespace el
