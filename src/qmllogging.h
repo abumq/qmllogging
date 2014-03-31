@@ -115,14 +115,14 @@ private:
     bool m_hasError;
     QString m_errorString;
     
-    explicit QMLLogging(const char* loggerId = el::base::consts::kDefaultLoggerId,
+    explicit QMLLogging(const std::string& loggerId = el::base::consts::kDefaultLoggerId,
                         QObject *parent = 0) : QObject(parent),
         m_hasError(false), m_errorString(QString()) {
         m_logger = el::Loggers::getLogger(loggerId);
         m_tracker.setLoggerId(loggerId);
         if (m_logger == nullptr) {
             m_hasError = true;
-            m_errorString = QString("Unable to find or register logger: [" + QString(loggerId) + "]");
+            m_errorString = QString("Unable to find or register logger: [" + QString(loggerId.c_str()) + "]");
         }
     }
     
