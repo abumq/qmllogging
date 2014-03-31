@@ -7,12 +7,19 @@ Rectangle {
     border.color: "black"
     radius: 50
     
-    width: 50
-    height: 50
+    width: 150
+    height: 150
     state: "YELLOW"
+    Text {
+        id: moveMeText
+        text: qsTr("Move me")
+        x: 25
+        y: 25
+    }
+
     MouseArea {
         anchors.fill: parent
-        acceptedButtons:  Qt.LeftButton | Qt.RightButton
+        acceptedButtons:  Qt.LeftButton
         onDoubleClicked: {
             rect.destroy();
         }
@@ -20,6 +27,8 @@ Rectangle {
             if (mouse.buttons & Qt.LeftButton) {
                 rect.x -= (x - mouse.x)
                 rect.y -= (y - mouse.y)
+                moveMeText.x = rect.x / 2
+                moveMeText.y = rect.y / 3
                 Log.info("Moving circle: ", rect.x, " x ", rect.y)
             }
         }

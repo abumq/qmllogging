@@ -26,7 +26,6 @@ Rectangle {
                 Log.verbose(2, "This is verbose")
             }
             Log.timeEnd("onClicked")
-            Log.profile()
         }
     }
     

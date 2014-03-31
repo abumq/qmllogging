@@ -19,7 +19,7 @@
 #define QMLLOGGING_H
 
 #include <QtQml>
-#include <QQmlDebuggingEnabler>
+#include <QQuickItem>
 
 #include <QtCore/QString>
 #include <QtCore/QObject>
@@ -34,16 +34,16 @@ namespace qml {
 #define LogT const LogStrT&
 
 #define FUNCTION_DEFINER(FN_NAME)\
-Q_INVOKABLE void FN_NAME(LogT t, LogT t2 = LogStrT(), LogT t3 = LogStrT(), LogT t4 = LogStrT(),\
-        LogT t5 = LogStrT(), LogT t6 = LogStrT(), LogT t7 = LogStrT(), LogT t8 = LogStrT(),\
-        LogT t9 = LogStrT(), LogT t10 = LogStrT(), LogT t11 = LogStrT(), LogT t12 = LogStrT()) {\
-        if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);}
+    Q_INVOKABLE void FN_NAME(LogT t, LogT t2 = LogStrT(), LogT t3 = LogStrT(), LogT t4 = LogStrT(),\
+    LogT t5 = LogStrT(), LogT t6 = LogStrT(), LogT t7 = LogStrT(), LogT t8 = LogStrT(),\
+    LogT t9 = LogStrT(), LogT t10 = LogStrT(), LogT t11 = LogStrT(), LogT t12 = LogStrT()) {\
+    if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);}
 #define FUNCTION_DEFINER_V(FN_NAME)\
-Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2 = LogStrT(), LogT t3 = LogStrT(), LogT t4 = LogStrT(),\
-        LogT t5 = LogStrT(), LogT t6 = LogStrT(), LogT t7 = LogStrT(), LogT t8 = LogStrT(),\
-        LogT t9 = LogStrT(), LogT t10 = LogStrT(), LogT t11 = LogStrT(), LogT t12 = LogStrT()) {\
-        if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);}\
-
+    Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2 = LogStrT(), LogT t3 = LogStrT(), LogT t4 = LogStrT(),\
+    LogT t5 = LogStrT(), LogT t6 = LogStrT(), LogT t7 = LogStrT(), LogT t8 = LogStrT(),\
+    LogT t9 = LogStrT(), LogT t10 = LogStrT(), LogT t11 = LogStrT(), LogT t12 = LogStrT()) {\
+    if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);}\
+    
 class VersionInfo : el::base::StaticClass {
 public:
     static inline int getMajor() { return version()[0].digitValue(); }
@@ -68,7 +68,7 @@ public:
     void setLoggerId(const std::string& loggerId) {
         m_loggerId = loggerId;
     }
-
+    
     void timeBegin(const HashMap::key_type& blockName) {
         if (m_loggerId.empty()) {
             ELPP_INTERNAL_ERROR("Set loggerID first!", false);
@@ -78,7 +78,7 @@ public:
         // otherwise unnecessary check occurs 
         m_timedBlocks.insert(blockName, 
                              new Tracker(blockName.toStdString(), _ELPP_MIN_UNIT,
-                                                        m_loggerId));
+                                         m_loggerId));
     }
     void timeEnd(const HashMap::key_type& blockName) {
         if (m_timedBlocks.contains(blockName)) {
@@ -147,7 +147,7 @@ public:
         m_tracker.timeEnd(blockName);
     }
     Q_INVOKABLE inline void timeCheck(const QString& blockName, 
-            const QString& checkpointId = QString()) {
+                                      const QString& checkpointId = QString()) {
         m_tracker.timeCheck(blockName, checkpointId);
     }
     
@@ -165,7 +165,7 @@ public:
     Q_INVOKABLE inline void countEnd(const QString& msg) {
         m_counters.remove(msg);
     }
-
+    
     // Assertion functions
     Q_INVOKABLE inline void assert(bool condition, const QString& msg) {
         if (_ELPP_DEBUG_LOG && !condition) {
@@ -176,6 +176,7 @@ public:
 }  // namespace qml
 }  // namespace el
 #undef FUNCTION_DEFINER
+#undef LogStrT
 #undef LogT
 #define _INITIALIZE_QMLLOGGING _INITIALIZE_EASYLOGGINGPP
 #endif // QMLLOGGING_H
