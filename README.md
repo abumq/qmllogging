@@ -56,6 +56,24 @@ Log.info("I am info log")
 
 Please see `samples/` directory for more samples
 
+### API
+
+Here is list of public functions
+
+ * `info(msg, ...)`
+ * `warn(msg, ...)`
+ * `debug(msg, ...)`
+ * `error(msg, ...)`
+ * `fatal(msg, ...)`
+ * `trace(msg, ...)`
+ * `verbose(level, msg, ...)`
+ * `timeBegin(blockName)`
+ * `timeEnd(blockName)`
+ * `timeCheck(blockName)`
+ * `count(msg)`
+ * `countEnd(msg)`
+ * `assert(condition, msg)`
+
 # Licence
 ```
 The MIT License (MIT)
