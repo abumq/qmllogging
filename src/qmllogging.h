@@ -1,5 +1,5 @@
 //
-//  QMLLogging v1.0 (development / unreleased version)
+//  QMLLogging v1.1
 //  Single-header only, Easylogging++ wrapper for QML logging
 //
 //  Requires:
@@ -48,8 +48,8 @@ class VersionInfo : el::base::StaticClass {
 public:
     static inline int getMajor() { return version()[0].digitValue(); }
     static inline int getMinor() { return version()[2].digitValue(); }
-    static inline const QString version(void) { return QString("1.0"); }
-    static inline const QString releaseDate(void) { return QString("29-03-2014 0052hrs"); }
+    static inline const QString version(void) { return QString("1.1"); }
+    static inline const QString releaseDate(void) { return QString("06-04-2014 1700hrs"); }
 };
 
 class TimeTracker : el::base::NoCopy {

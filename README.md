@@ -6,7 +6,7 @@ Easylogging++ wrapper for QML logging
                                        ‫بسم الله الرَّحْمَنِ الرَّحِيمِ
 
 
-> **Manual For v1.0**
+> **Manual For v1.1**
 
 ### Quick Links
 
