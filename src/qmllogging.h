@@ -4,7 +4,6 @@
 //
 //  Requires:
 //     * Easylogging++ v9.64 (or higher)
-//     * Qt Quick 2.0 (or higher)
 //
 //  Copyright (c) 2014 Majid Khan
 //
@@ -19,7 +18,6 @@
 #define QMLLOGGING_H
 
 #include <QtQml>
-#include <QQuickItem>
 
 #include <QtCore/QString>
 #include <QtCore/QObject>
@@ -109,14 +107,18 @@ public:
     bool hasError(void) const { return m_hasError; }
     QString errorString(void) const { return m_errorString; }
 private:
+    QQmlEngine* m_qmlEngine;
+    QJSEngine* m_jsEngine;
     el::Logger* m_logger;
-    TimeTracker m_tracker;
-    QHash<QString, int> m_counters;
     bool m_hasError;
     QString m_errorString;
+    TimeTracker m_tracker;
+    QHash<QString, int> m_counters;
     
-    explicit QMLLogging(const std::string& loggerId = el::base::consts::kDefaultLoggerId,
+    QMLLogging(QQmlEngine* qmlEngine, QJSEngine* jsEngine,
+                        const std::string& loggerId = el::base::consts::kDefaultLoggerId,
                         QObject *parent = 0) : QObject(parent),
+        m_qmlEngine(qmlEngine), m_jsEngine(jsEngine),
         m_hasError(false), m_errorString(QString()) {
         m_logger = el::Loggers::getLogger(loggerId);
         m_tracker.setLoggerId(loggerId);
@@ -126,8 +128,8 @@ private:
         }
     }
     
-    static QObject* newInstance(QQmlEngine*, QJSEngine*) {
-        return new QMLLogging();
+    static QObject* newInstance(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+        return new QMLLogging(qmlEngine, jsEngine);
     }
 public:
     
