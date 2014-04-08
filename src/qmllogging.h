@@ -1,5 +1,5 @@
 //
-//  QMLLogging v1.1
+//  QMLLogging v1.1 (development / unreleased version)
 //  Single-header only, Easylogging++ wrapper for QML logging
 //
 //  Requires:
