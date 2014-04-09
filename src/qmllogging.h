@@ -85,7 +85,7 @@ public:
         }
     }
     void timeCheck(const HashMap::key_type& blockName, QString checkpointId = QString()) {
-        typename HashMap::iterator iterator = m_timedBlocks.find(blockName);
+        HashMap::iterator iterator = m_timedBlocks.find(blockName);
         if (iterator != m_timedBlocks.end()) {
             (*iterator)->checkpoint(checkpointId.toStdString().c_str());
         }
