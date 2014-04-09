@@ -1,7 +1,7 @@
 QML Logging
 ===========
 
-Easylogging++ wrapper for QML logging
+Easylogging++ wrapper for advanced logging support for QML applications
 
                                        ‫بسم الله الرَّحْمَنِ الرَّحِيمِ
 
@@ -40,7 +40,8 @@ In order to get started with QML Logging, you can follow three easy steps;
 
 _INITIALIZE_QMLLOGGING
 
-int main(int argv, char* argc[]) {
+int main(int argc, char* argv[]) {
+   _START_EASYLOGGINGPP(argc, argv); // Optional but always recommended to put this - needed by some functionalities
    ...
    el::qml::QMLLogging::registerNew("Log");
    ...
@@ -65,6 +66,7 @@ Please see `samples/` directory for more samples
 
 Here is list of public functions
 
+#### Logging
  * `info(msg, ...)`
  * `warn(msg, ...)`
  * `debug(msg, ...)`
@@ -73,13 +75,16 @@ Here is list of public functions
  * `trace(msg, ...)`
  * `verbose(level, msg, ...)`
 
+#### Timing
  * `timeBegin(blockName)`
  * `timeEnd(blockName)`
  * `timeCheck(blockName)`
 
+#### Couting
  * `count(msg)`
  * `countEnd(msg)`
 
+#### Assertion
  * `assert(condition, msg)`
 
 # Licence
