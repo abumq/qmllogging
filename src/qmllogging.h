@@ -97,11 +97,16 @@ private:
 class QMLLogging : public QObject
 {
     Q_OBJECT
+    static QMLLogging* s_pQMLLogging = nullptr;
 public:
     static void registerNew(const char* contextName = "Log") {
         qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 
                                              qml::VersionInfo::getMajor(), qml::VersionInfo::getMinor(),
                                              contextName, QMLLogging::newInstance);
+    }
+
+    static const QMLLogging* getInstancePointer(void) {
+        return static_cast<const QMLLogging*>(QMLLogging::s_pQMLLogging);
     }
     
     bool hasError(void) const { return m_hasError; }
@@ -129,7 +134,8 @@ private:
     }
     
     static QObject* newInstance(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
-        return new QMLLogging(qmlEngine, jsEngine);
+        QMLLogging::s_pQMLLogging = new QMLLogging(qmlEngine, jsEngine);
+        return s_pQMLLogging;
     }
 public:
     
