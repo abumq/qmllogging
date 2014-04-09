@@ -3,7 +3,7 @@
 //  Single-header only, Easylogging++ wrapper for QML logging
 //
 //  Requires:
-//     * Easylogging++ v9.64 (or higher)
+//     * Easylogging++ v9.66 (or higher)
 //
 //  Copyright (c) 2014 Majid Khan
 //
@@ -94,22 +94,22 @@ private:
     std::string m_loggerId;
     HashMap m_timedBlocks;
 };
+
+class QMLLogging;
+
+extern QMLLogging* s_qmlLogging;
+extern std::string s_defaultLoggerId;
+
 class QMLLogging : public QObject
 {
     Q_OBJECT
-    static QMLLogging* s_qmlLogging = nullptr;
-    static std::string s_defaultLoggerId;
 public:
-    static bool registerNew(const char* contextName = "Log", const char* loggerId = "qml") {
-        QMLLogging::s_defaultLoggerId = std::string(loggerId)
-        int reg = qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 
-                                                       qml::VersionInfo::getMajor(), qml::VersionInfo::getMinor(),
-                                                       contextName, QMLLogging::newInstance);
-        return reg != 0;
-    }
-
-    static const QMLLogging* getInstancePointer(void) {
-        return static_cast<const QMLLogging*>(QMLLogging::s_qmlLogging);
+    static void registerNew(const char* contextName = "Log", const char* loggerId = "qml") {
+        qml::s_defaultLoggerId = std::string(loggerId);
+        qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml",
+                                             qml::VersionInfo::getMajor(), 
+                                             qml::VersionInfo::getMinor(),
+                                             contextName, QMLLogging::newInstance);
     }
     
     bool hasError(void) const { return m_hasError; }
@@ -127,17 +127,17 @@ private:
                    QObject *parent = 0) : QObject(parent),
             m_qmlEngine(qmlEngine), m_jsEngine(jsEngine),
             m_hasError(false), m_errorString(QString()) {
-        m_logger = el::Loggers::getLogger(QMLLogging::s_defaultLoggerId, true);
-        m_tracker.setLoggerId(QMLLogging::s_defaultLoggerId);
+        m_logger = el::Loggers::getLogger(qml::s_defaultLoggerId, true);
+        m_tracker.setLoggerId(qml::s_defaultLoggerId);
         if (m_logger == nullptr) {
             m_hasError = true;
-            m_errorString = QString("Unable to find or register logger: [" + QString(QMLLogging::s_defaultLoggerId.c_str()) + "]");
+            m_errorString = QString("Unable to find or register logger: [" + QString(qml::s_defaultLoggerId.c_str()) + "]");
         }
     }
     
     static QObject* newInstance(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
-        QMLLogging::s_qmlLogging = new QMLLogging(qmlEngine, jsEngine);
-        return s_qmlLogging;
+        qml::s_qmlLogging = new QMLLogging(qmlEngine, jsEngine);
+        return qml::s_qmlLogging;
     }
 public:
     
@@ -153,9 +153,11 @@ public:
     Q_INVOKABLE inline void timeBegin(const QString& blockName) {
         m_tracker.timeBegin(blockName);
     }
+    
     Q_INVOKABLE inline void timeEnd(const QString& blockName) {
         m_tracker.timeEnd(blockName);
     }
+    
     Q_INVOKABLE inline void timeCheck(const QString& blockName, 
                                       const QString& checkpointId = QString()) {
         m_tracker.timeCheck(blockName, checkpointId);
@@ -188,5 +190,12 @@ public:
 #undef FUNCTION_DEFINER
 #undef LogStrT
 #undef LogT
-#define _INITIALIZE_QMLLOGGING _INITIALIZE_EASYLOGGINGPP
+#define _INITIALIZE_QMLLOGGING \
+    _INITIALIZE_EASYLOGGINGPP \
+    namespace el { \
+        namespace qml { \
+            QMLLogging* s_qmlLogging = nullptr; \
+            std::string s_defaultLoggerId; \
+        } \
+    }
 #endif // QMLLOGGING_H

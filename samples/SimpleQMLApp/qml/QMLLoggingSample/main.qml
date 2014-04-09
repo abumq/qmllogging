@@ -24,6 +24,8 @@ Rectangle {
                 Log.info("1. This is ", rect, " and this is continuation of log")
                 Log.info("2. This is ", rect)
                 Log.verbose(2, "This is verbose")
+                Log.info("2. This is ", rect)
+                
             }
             Log.timeEnd("onClicked")
         }

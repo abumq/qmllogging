@@ -21,5 +21,7 @@ HEADERS += \
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
 
+qmldir.files = qmldir
+
 OTHER_FILES += \
     MyCircle.qml
