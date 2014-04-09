@@ -31,16 +31,16 @@ namespace qml {
 #define LogStrT QString
 #define LogT const LogStrT&
 
-#define FUNCTION_DEFINER(FN_NAME)\
+#define FUNCTION_DEFINER(LEVEL, FN_NAME)\
     Q_INVOKABLE void FN_NAME(LogT t, LogT t2 = LogStrT(), LogT t3 = LogStrT(), LogT t4 = LogStrT(),\
     LogT t5 = LogStrT(), LogT t6 = LogStrT(), LogT t7 = LogStrT(), LogT t8 = LogStrT(),\
     LogT t9 = LogStrT(), LogT t10 = LogStrT(), LogT t11 = LogStrT(), LogT t12 = LogStrT()) {\
-    if (!m_hasError) m_logger->FN_NAME("%v%v%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);}
+    if (!m_hasError) { CLOG(LEVEL, m_loggerId.c_str()) <<  t << t2 << t3 << t4 << t5 << t6 << t7 << t8 << t9 << t10 << t11 << t12;}}
 #define FUNCTION_DEFINER_V(FN_NAME)\
     Q_INVOKABLE void FN_NAME(int vlevel, LogT t, LogT t2 = LogStrT(), LogT t3 = LogStrT(), LogT t4 = LogStrT(),\
     LogT t5 = LogStrT(), LogT t6 = LogStrT(), LogT t7 = LogStrT(), LogT t8 = LogStrT(),\
     LogT t9 = LogStrT(), LogT t10 = LogStrT(), LogT t11 = LogStrT(), LogT t12 = LogStrT()) {\
-    if (!m_hasError) m_logger->verbose(vlevel, "%v%v%v%v%v%v%v%v%v%v%v%v", t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);}\
+    if (!m_hasError) { CVLOG(vlevel, m_loggerId.c_str()) <<  t << t2 << t3 << t4 << t5 << t6 << t7 << t8 << t9 << t10 << t11 << t12;}}
     
 class VersionInfo : el::base::StaticClass {
 public:
@@ -117,7 +117,7 @@ public:
 private:
     QQmlEngine* m_qmlEngine;
     QJSEngine* m_jsEngine;
-    el::Logger* m_logger;
+    std::string m_loggerId;
     bool m_hasError;
     QString m_errorString;
     TimeTracker m_tracker;
@@ -127,12 +127,9 @@ private:
                    QObject *parent = 0) : QObject(parent),
             m_qmlEngine(qmlEngine), m_jsEngine(jsEngine),
             m_hasError(false), m_errorString(QString()) {
-        m_logger = el::Loggers::getLogger(qml::s_defaultLoggerId, true);
-        m_tracker.setLoggerId(qml::s_defaultLoggerId);
-        if (m_logger == nullptr) {
-            m_hasError = true;
-            m_errorString = QString("Unable to find or register logger: [" + QString(qml::s_defaultLoggerId.c_str()) + "]");
-        }
+        m_loggerId = qml::s_defaultLoggerId;
+        el::Loggers::getLogger(m_loggerId);
+        m_tracker.setLoggerId(m_loggerId);
     }
     
     static QObject* newInstance(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
@@ -141,12 +138,12 @@ private:
     }
 public:
     
-    FUNCTION_DEFINER(info)
-    FUNCTION_DEFINER(warn)
-    FUNCTION_DEFINER(debug)
-    FUNCTION_DEFINER(error)
-    FUNCTION_DEFINER(fatal)
-    FUNCTION_DEFINER(trace)
+    FUNCTION_DEFINER(INFO, info)
+    FUNCTION_DEFINER(WARNING, warn)
+    FUNCTION_DEFINER(DEBUG, debug)
+    FUNCTION_DEFINER(ERROR, error)
+    FUNCTION_DEFINER(FATAL, fatal)
+    FUNCTION_DEFINER(TRACE, trace)
     FUNCTION_DEFINER_V(verbose)
     
     // Time tracker functions
@@ -170,7 +167,7 @@ public:
             if (iterator == m_counters.end()) {
                 iterator = m_counters.insert(msg, 0);
             }
-            m_logger->info("%v {%v}", msg, ++*iterator);
+            CLOG(INFO, m_loggerId.c_str()) << msg << " {" << ++*iterator << "}";
         }
     }
     
@@ -181,7 +178,7 @@ public:
     // Assertion functions
     Q_INVOKABLE inline void assert(bool condition, const QString& msg) {
         if (_ELPP_DEBUG_LOG && !condition) {
-            m_logger->fatal("Check failed: [%v] ", msg);
+            CLOG(FATAL, m_loggerId.c_str()) << "Check failed: [" << msg << "] ";
         }
     }
 };
