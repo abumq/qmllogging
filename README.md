@@ -19,8 +19,9 @@ Easylogging++ wrapper for QML logging
   [![paypal]](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4W7YDRCXWURWG)
 
 # Introduction
-Provides functionalities to write logs for your QML applications. You can check out [Easylogging++](https://github.com/easylogging/easyloggingpp/) to see some more exciting things you can do.
-This project is in very early stages of development. All sorts of support are welcomed.
+Provides functionalities to write logs and do various other functions for your QML applications. You should check out [Easylogging++](https://github.com/easylogging/easyloggingpp/) to see some more exciting things you can do.
+
+This project is in early stages and any type of support is accepted.
 
 # Getting Started
 ### Download
@@ -37,17 +38,21 @@ In order to get started with QML Logging, you can follow three easy steps;
 ```c++
 #include "qmllogging.h"
 
-_INITIALIZE_EASYLOGGINGPP
+_INITIALIZE_QMLLOGGING
 
 int main(int argv, char* argc[]) {
    ...
    el::qml::QMLLogging::registerNew("Log");
    ...
+
+   // If you wish to access the registered instance of pointer you can do so by
+   const el::qml::QMLLogging* instancePtr = el::qml::QMLLogging::getInstancePointer();
+   // NOTE: DO NOT DELETE THIS POINTER!
 }
 ```
 
 ```c++
-import org.easylogging.qml.1.0 ## (Your version)
+import org.easylogging.qml.1.1
 
 ...
 Log.info("I am info log")
@@ -56,7 +61,7 @@ Log.info("I am info log")
 
 Please see `samples/` directory for more samples
 
-### API
+# API
 
 Here is list of public functions
 
@@ -67,11 +72,14 @@ Here is list of public functions
  * `fatal(msg, ...)`
  * `trace(msg, ...)`
  * `verbose(level, msg, ...)`
+
  * `timeBegin(blockName)`
  * `timeEnd(blockName)`
  * `timeCheck(blockName)`
+
  * `count(msg)`
  * `countEnd(msg)`
+
  * `assert(condition, msg)`
 
 # Licence
@@ -101,10 +109,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
 ```
 
- 
   [banner]: http://easylogging.org/images/banner.png?v=4
-
-
   [download]: http://easylogging.org/images/download.png?v=2
   [www]: http://easylogging.org/images/logo-www.png?v=2
   [paypal]: https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif
