@@ -28,4 +28,7 @@ void Server::handleConnection()
 {
     QTcpSocket* conn = nextPendingConnection();
     LOG(INFO) << "Handling connection @" << conn;
+    
+    // Implement reading message using conn->readAll() either in same or different
+    // thread, if you want to read in different thread make sure you use _ELPP_THREAD_SAFE
 }
