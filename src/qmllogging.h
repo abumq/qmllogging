@@ -98,8 +98,10 @@ class QMLLogging : public QObject
 {
     Q_OBJECT
     static QMLLogging* s_pQMLLogging = nullptr;
+    static std::string s_defaultLoggerId;
 public:
-    static void registerNew(const char* contextName = "Log") {
+    static void registerNew(const char* contextName = "Log", const QString& loggerId = QString("qml")) {
+        QMLLogging::s_defaultLoggerId = loggerId.toStdString();
         qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 
                                              qml::VersionInfo::getMajor(), qml::VersionInfo::getMinor(),
                                              contextName, QMLLogging::newInstance);
@@ -121,15 +123,14 @@ private:
     QHash<QString, int> m_counters;
     
     QMLLogging(QQmlEngine* qmlEngine, QJSEngine* jsEngine,
-                        const std::string& loggerId = el::base::consts::kDefaultLoggerId,
-                        QObject *parent = 0) : QObject(parent),
-        m_qmlEngine(qmlEngine), m_jsEngine(jsEngine),
-        m_hasError(false), m_errorString(QString()) {
-        m_logger = el::Loggers::getLogger(loggerId);
-        m_tracker.setLoggerId(loggerId);
+                   QObject *parent = 0) : QObject(parent),
+            m_qmlEngine(qmlEngine), m_jsEngine(jsEngine),
+            m_hasError(false), m_errorString(QString()) {
+        m_logger = el::Loggers::getLogger(QMLLogging::s_defaultLoggerId, true);
+        m_tracker.setLoggerId(QMLLogging::s_defaultLoggerId);
         if (m_logger == nullptr) {
             m_hasError = true;
-            m_errorString = QString("Unable to find or register logger: [" + QString(loggerId.c_str()) + "]");
+            m_errorString = QString("Unable to find or register logger: [" + QString(QMLLogging::s_defaultLoggerId.c_str()) + "]");
         }
     }
     

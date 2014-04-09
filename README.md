@@ -60,7 +60,29 @@ Log.info("I am info log")
 ...
 ```
 
-Please see `samples/` directory for more samples
+### Notes
+
+Default logger for QML logging is `qml`. You can change this by passing second argument to `registerNew` function.
+
+By default, your QML application will also write to `logs/` directory, you can disable this behaviour by reconfiguring default configurations (also update existing loggers). This configuration will have `el::ConfigurationType::ToFile` to `false`.
+
+```c++
+#include "qmllogging.h"
+
+_INITIALIZE_QMLLOGGING
+
+int main(int argc, char* argv[]) {
+   _START_EASYLOGGINGPP(argc, argv);
+
+   el::Configurations myConfigurations;
+   myConfigurations.setGlobally(ConfigurationType::ToFile, "false");
+   Loggers::setDefaultConfigurations(myConfigurations, true);
+
+   el::qml::QMLLogging::registerNew("Log");
+}
+```
+
+ > Please see `samples/` directory for samples
 
 # API
 
