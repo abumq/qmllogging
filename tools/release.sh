@@ -59,9 +59,11 @@ if [ "$confirm" = "y" ]; then
   fi
   cp $1/src/qmllogging.h .
   zip qmllogging_v$NEW_VERSION.zip qmllogging.h
+  tar -pczf qmllogging_v$NEW_VERSION.tar.gz qmllogging.h
   zip latest.zip qmllogging.h
   mv latest.zip $2/
   mv qmllogging_v$NEW_VERSION.zip $2/releases/
+  mv qmllogging_v$NEW_VERSION.tar.gz $2/releases/
   cp $1/doc/RELEASE-NOTES-v$NEW_VERSION $2/release-notes-latest.txt
   cp $1/doc/RELEASE-NOTES-v$NEW_VERSION $2/releases/release-notes-v$NEW_VERSION.txt
   rm qmllogging.h
