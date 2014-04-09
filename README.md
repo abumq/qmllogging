@@ -45,10 +45,6 @@ int main(int argc, char* argv[]) {
    ...
    el::qml::QMLLogging::registerNew("Log");
    ...
-
-   // If you wish to access the registered instance of pointer you can do so by
-   const el::qml::QMLLogging* instancePtr = el::qml::QMLLogging::getInstancePointer();
-   // NOTE: DO NOT DELETE THIS POINTER!
 }
 ```
 

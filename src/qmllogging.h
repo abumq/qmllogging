@@ -97,18 +97,19 @@ private:
 class QMLLogging : public QObject
 {
     Q_OBJECT
-    static QMLLogging* s_pQMLLogging = nullptr;
+    static QMLLogging* s_qmlLogging = nullptr;
     static std::string s_defaultLoggerId;
 public:
-    static void registerNew(const char* contextName = "Log", const QString& loggerId = QString("qml")) {
-        QMLLogging::s_defaultLoggerId = loggerId.toStdString();
-        qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 
-                                             qml::VersionInfo::getMajor(), qml::VersionInfo::getMinor(),
-                                             contextName, QMLLogging::newInstance);
+    static bool registerNew(const char* contextName = "Log", const char* loggerId = "qml") {
+        QMLLogging::s_defaultLoggerId = std::string(loggerId)
+        int reg = qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml", 
+                                                       qml::VersionInfo::getMajor(), qml::VersionInfo::getMinor(),
+                                                       contextName, QMLLogging::newInstance);
+        return reg != 0;
     }
 
     static const QMLLogging* getInstancePointer(void) {
-        return static_cast<const QMLLogging*>(QMLLogging::s_pQMLLogging);
+        return static_cast<const QMLLogging*>(QMLLogging::s_qmlLogging);
     }
     
     bool hasError(void) const { return m_hasError; }
@@ -135,8 +136,8 @@ private:
     }
     
     static QObject* newInstance(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
-        QMLLogging::s_pQMLLogging = new QMLLogging(qmlEngine, jsEngine);
-        return s_pQMLLogging;
+        QMLLogging::s_qmlLogging = new QMLLogging(qmlEngine, jsEngine);
+        return s_qmlLogging;
     }
 public:
     
