@@ -24,7 +24,8 @@
 #include <QtCore/QHash>
 
 #define _ELPP_QT_LOGGING
-#include <easylogging++.h>
+// NOTE: Include easylogging++ this according to your configurations
+#include "../../../easyloggingpp/src/easylogging++.h"
 
 namespace el {
 namespace qml {

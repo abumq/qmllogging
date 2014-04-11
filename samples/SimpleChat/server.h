@@ -29,13 +29,16 @@ public:
     explicit Server(QObject* parent = 0);
     virtual ~Server(void);
     Q_INVOKABLE bool start(int port);
-    Q_INVOKABLE int port() { return m_port; }
+    Q_INVOKABLE QString info() const;
+    int port() const { return m_port; }
 public slots:
     void handleConnection();
 signals:
     void ready(QString msg);
 private:
     int m_port;
+    
+    QString getIp() const;
 };
 
 #endif // SERVER_H

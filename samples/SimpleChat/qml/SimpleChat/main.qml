@@ -80,7 +80,7 @@ Rectangle {
             y: 337
             width: 293
             height: 20
-            text: "localhost:" + Server.port()
+            text: Server.info()
             font.pixelSize: 12
         }
 

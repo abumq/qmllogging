@@ -20,16 +20,32 @@ static QObject* singletonServer(QQmlEngine*, QJSEngine*) {
     return server;
 }
 
+const char* getThreadId() {
+    return ""; // Custom thread id
+}
+
+static el::Configurations defaultLogConfigurations() {
+    el::Configurations result;
+    result.set(el::Level::Global, el::ConfigurationType::Format,
+        "%datetime{%H:%m:%s} %level %logger [%thread] %msg");
+    result.setRemainingToDefault();
+    return result;
+}
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     _START_EASYLOGGINGPP(argc, argv);
 
+    el::Helpers::installCustomFormatSpecifier(el::CustomFormatSpecifier("%tid", getThreadId));
+    el::Loggers::setDefaultConfigurations(defaultLogConfigurations(), true);
+    
     bool serverStarted = server->start(kPort);
     LOG_IF(!serverStarted, INFO) << "Unable to start server";
     
     qmlRegisterSingletonType<Client>("org.easylogging.qml.simplechat", 1, 0, "Messenger", singletonClient);
     qmlRegisterSingletonType<Server>("org.easylogging.qml.simplechat", 1, 0, "Server", singletonServer);
+    
     el::qml::QMLLogging::registerNew();
     
     QtQuick2ApplicationViewer viewer;

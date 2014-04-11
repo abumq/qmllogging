@@ -56,12 +56,28 @@ bool Server::start(int port)
     return false;
 }
 
+QString Server::info() const
+{
+    return getIp().split(",")[0] + ":" + QString::number(port());
+}
+
 void Server::handleConnection()
 {
     QTcpSocket* conn = nextPendingConnection();
-    LOG(INFO) << "Handling connection @" << conn;
+    LOG(INFO) << "Handling connection @" << conn << " from " <<
+        conn->peerAddress().toString();
     ConnectionHandler* handler = new ConnectionHandler(conn, this);
     connect(handler, SIGNAL(ready(QString)), this, SIGNAL(ready(QString)), Qt::DirectConnection);
     connect(handler, SIGNAL(finished()), handler, SLOT(deleteLater()));
     handler->start();    
+}
+
+QString Server::getIp() const
+{   
+    QStringList ips;
+    foreach (const QHostAddress &address, QNetworkInterface::allAddresses()) {
+    if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
+         ips << address.toString();
+    }
+    return ips.join(",");
 }
