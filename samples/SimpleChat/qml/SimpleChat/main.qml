@@ -87,18 +87,18 @@ Rectangle {
         TextInput {
             id: txtClientLocation
             x: 64
-            y: 290
+            y: 292
             width: 251
-            height: 20
+            height: 18
             text: "localhost:15910"
             font.pixelSize: 12
         }
 
         Rectangle {
             id: btnStart
-            x: 316
+            x: 300
             y: 337
-            width: 36
+            width: 50
             height: 20
             color: "#000000"
             z: -1
@@ -113,8 +113,7 @@ Rectangle {
                 id: text1
                 x: 5
                 y: 0
-                width: 42
-                height: 20
+                anchors.fill: parent
                 color: "#ffffff"
                 text: qsTr("Start")
                 font.bold: true
@@ -128,7 +127,7 @@ Rectangle {
             x: 64
             y: 314
             width: 251
-            height: 20
+            height: 17
             text: qsTr("mkhan3189")
             font.pixelSize: 12
         }
