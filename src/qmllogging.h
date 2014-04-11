@@ -187,6 +187,7 @@ public:
 #undef FUNCTION_DEFINER
 #undef LogStrT
 #undef LogT
+#undef _INITIALIZE_QMLLOGGING
 #define _INITIALIZE_QMLLOGGING \
     _INITIALIZE_EASYLOGGINGPP \
     namespace el { \

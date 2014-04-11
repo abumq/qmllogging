@@ -2,6 +2,35 @@
 
 #include "../../src/qmllogging.h"
 
+ConnectionHandler::ConnectionHandler(QTcpSocket *tcpSocket, QObject *parent)
+    : QThread(parent), m_tcpSocket(tcpSocket)
+{
+    
+}
+
+void ConnectionHandler::run()
+{
+    if (m_tcpSocket == nullptr) {
+        onDisconnected();
+    }
+    connect(m_tcpSocket, SIGNAL(readyRead()), this, SLOT(onReady()));
+    connect(m_tcpSocket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+    exec();
+}
+
+void ConnectionHandler::onDisconnected() 
+{
+    if (m_tcpSocket != nullptr) {
+        m_tcpSocket->deleteLater();
+    }
+    exit(); // Exit thread
+}
+
+void ConnectionHandler::onReady()
+{
+    emit ready(QString(m_tcpSocket->readAll()).trimmed());
+}
+
 Server::Server(QObject* parent) :
     QTcpServer(parent)
 {
@@ -13,6 +42,9 @@ Server::~Server(void)
 
 bool Server::start(int port)
 {
+    if (isListening()) {
+        close();
+    }
     if (listen(QHostAddress::Any, port)) {
         m_port = port;
         connect(this, SIGNAL(newConnection()), this, SLOT(handleConnection()));
@@ -28,7 +60,8 @@ void Server::handleConnection()
 {
     QTcpSocket* conn = nextPendingConnection();
     LOG(INFO) << "Handling connection @" << conn;
-    
-    // Implement reading message using conn->readAll() either in same or different
-    // thread, if you want to read in different thread make sure you use _ELPP_THREAD_SAFE
+    ConnectionHandler* handler = new ConnectionHandler(conn, this);
+    connect(handler, SIGNAL(ready(QString)), this, SIGNAL(ready(QString)), Qt::DirectConnection);
+    connect(handler, SIGNAL(finished()), handler, SLOT(deleteLater()));
+    handler->start();    
 }
