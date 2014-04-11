@@ -45,7 +45,7 @@ Rectangle {
             font.pixelSize: 12
             Keys.onReturnPressed: {
                 if (txtMessage.text.length > 0) {
-                    var message = txtNick.text + txtMessage.text
+                    var message = txtNick.text + ": " + txtMessage.text
                     Messenger.sendMessage(txtClientLocation.text.split(":")[0], 
                         txtClientLocation.text.split(":")[1], 
                         message)
