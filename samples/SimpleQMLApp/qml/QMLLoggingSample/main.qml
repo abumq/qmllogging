@@ -17,17 +17,17 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            Log.timeBegin("onClicked")
-            Log.count("onClicked times")
+            log.timeBegin("onClicked")
+            log.count("onClicked times")
             if (rect == null) {
                 rect = Qt.createComponent("MyCircle.qml").createObject(parent, {x: mouseX, y: mouseY})
-                Log.info("1. This is ", rect, " and this is continuation of log")
-                Log.info("2. This is ", rect)
-                Log.verbose(2, "This is verbose")
-                Log.info("2. This is ", rect)
+                log.info("1. This is ", rect, " and this is continuation of log")
+                log.info("2. This is ", rect)
+                log.verbose(2, "This is verbose")
+                log.info("2. This is ", rect)
                 
             }
-            Log.timeEnd("onClicked")
+            log.timeEnd("onClicked")
         }
     }
     
@@ -50,7 +50,7 @@ Rectangle {
             anchors.fill: parent
             function toggleState() {
                 if (rect == null) {
-                    Log.error("Please click area first")
+                    log.error("Please click area first")
                     return;
                 }
                 if (rect.state == "YELLOW")

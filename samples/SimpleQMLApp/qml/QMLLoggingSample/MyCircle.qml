@@ -29,7 +29,7 @@ Rectangle {
                 rect.y -= (y - mouse.y)
                 moveMeText.x = rect.x / 2
                 moveMeText.y = rect.y / 3
-                Log.info("Moving circle: ", rect.x, " x ", rect.y)
+                log.info("Moving circle: ", rect.x, " x ", rect.y)
             }
         }
     }
@@ -38,13 +38,13 @@ Rectangle {
             name: "YELLOW"
             PropertyChanges { target: rect; color: "yellow" }
             PropertyChanges { target: mainText; color: "red" }
-            StateChangeScript { script: Log.info("State changed to YELLOW") }
+            StateChangeScript { script: log.info("State changed to YELLOW") }
         },
         State {
             name: "RED"
             PropertyChanges { target: rect; color: "red" }
             PropertyChanges { target: mainText; color: "yellow" }
-            StateChangeScript { script: Log.info("State changed to RED") }
+            StateChangeScript { script: log.info("State changed to RED") }
         }
     ]
     transitions: [
