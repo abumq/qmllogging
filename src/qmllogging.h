@@ -116,7 +116,7 @@ public:
                                     qml::VersionInfo::getMinor(),
                                     "QmlLogging");
         if (rootContext != nullptr) {
-            rootContext->setContextProperty("Log",
+            rootContext->setContextProperty("log",
                 static_cast<QObject*>(qml::s_qmlLogging.data()));
         }
     }
