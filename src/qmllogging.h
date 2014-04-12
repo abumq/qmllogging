@@ -1,9 +1,9 @@
 //
-//  QMLLogging v1.1 (development / unreleased version)
+//  QmlLogging v1.1 (development / unreleased version)
 //  Single-header only, Easylogging++ wrapper for QML logging
 //
 //  Requires:
-//     * Easylogging++ v9.66 (or higher)
+//     * Easylogging++ v9.67 (or higher)
 //
 //  Copyright (c) 2014 Majid Khan
 //
@@ -17,15 +17,16 @@
 #ifndef QMLLOGGING_H
 #define QMLLOGGING_H
 
-#include <QtQml>
-
+#include <QSharedPointer>
+#include <QQuickItem>
+#include <QQmlContext>
 #include <QtCore/QString>
 #include <QtCore/QObject>
 #include <QtCore/QHash>
 
 #define _ELPP_QT_LOGGING
 // NOTE: Include easylogging++ this according to your configurations
-#include "../../../easyloggingpp/src/easylogging++.h"
+#include <easylogging++.h>
 
 namespace el {
 namespace qml {
@@ -96,47 +97,50 @@ private:
     HashMap m_timedBlocks;
 };
 
-class QMLLogging;
+class QmlLogging;
 
-extern QMLLogging* s_qmlLogging;
+extern QSharedPointer<QmlLogging> s_qmlLogging;
 extern std::string s_defaultLoggerId;
 
-class QMLLogging : public QObject
+class QmlLogging : public QQuickItem
 {
     Q_OBJECT
 public:
-    static void registerNew(const char* contextName = "Log", const char* loggerId = "qml") {
+    static void registerNew(
+            QQmlContext* rootContext,
+            const char* loggerId = "qml") {
         qml::s_defaultLoggerId = std::string(loggerId);
-        qmlRegisterSingletonType<QMLLogging>("org.easylogging.qml",
-                                             qml::VersionInfo::getMajor(), 
-                                             qml::VersionInfo::getMinor(),
-                                             contextName, QMLLogging::newInstance);
+        qml::s_qmlLogging = QSharedPointer<QmlLogging>(new QmlLogging);
+        qmlRegisterType<QmlLogging>("org.easylogging.qml",
+                                    qml::VersionInfo::getMajor(), 
+                                    qml::VersionInfo::getMinor(),
+                                    "QmlLogging");
+        if (rootContext != nullptr) {
+            rootContext->setContextProperty("Log",
+                static_cast<QObject*>(qml::s_qmlLogging.data()));
+        }
+    }
+    
+    QmlLogging(QQuickItem *parent = 0) : QQuickItem(parent),
+            m_hasError(false), m_errorString(QString()) {
+        el::Loggers::addFlag(el::LoggingFlag::DisableApplicationAbortOnFatalLog);
+        m_loggerId = qml::s_defaultLoggerId;
+        el::Loggers::getLogger(m_loggerId);
+        m_tracker.setLoggerId(m_loggerId);
+        setObjectName("QmlLogging");
+        el::Loggers::getLogger("QmlLogging");
+        CLOG_AFTER_N(1, WARNING, "QmlLogging") 
+            << "Multiple instances of QmlLogging registered";
     }
     
     bool hasError(void) const { return m_hasError; }
     QString errorString(void) const { return m_errorString; }
 private:
-    QQmlEngine* m_qmlEngine;
-    QJSEngine* m_jsEngine;
     std::string m_loggerId;
     bool m_hasError;
     QString m_errorString;
     TimeTracker m_tracker;
     QHash<QString, int> m_counters;
-    
-    QMLLogging(QQmlEngine* qmlEngine, QJSEngine* jsEngine,
-                   QObject *parent = 0) : QObject(parent),
-            m_qmlEngine(qmlEngine), m_jsEngine(jsEngine),
-            m_hasError(false), m_errorString(QString()) {
-        m_loggerId = qml::s_defaultLoggerId;
-        el::Loggers::getLogger(m_loggerId);
-        m_tracker.setLoggerId(m_loggerId);
-    }
-    
-    static QObject* newInstance(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
-        qml::s_qmlLogging = new QMLLogging(qmlEngine, jsEngine);
-        return qml::s_qmlLogging;
-    }
 public:
     
     FUNCTION_DEFINER(INFO, info)
@@ -193,7 +197,7 @@ public:
     _INITIALIZE_EASYLOGGINGPP \
     namespace el { \
         namespace qml { \
-            QMLLogging* s_qmlLogging = nullptr; \
+            QSharedPointer<QmlLogging> s_qmlLogging; \
             std::string s_defaultLoggerId; \
         } \
     }
