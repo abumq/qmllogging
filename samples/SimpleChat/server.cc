@@ -1,5 +1,6 @@
 #include "server.h"
-
+#include <QTcpSocket>
+#include <QNetworkInterface>
 #include "../../src/qmllogging.h"
 
 ConnectionHandler::ConnectionHandler(QTcpSocket *tcpSocket, QObject *parent)
@@ -48,10 +49,10 @@ bool Server::start(int port)
     if (listen(QHostAddress::Any, port)) {
         m_port = port;
         connect(this, SIGNAL(newConnection()), this, SLOT(handleConnection()));
-        LOG(INFO) << "Started server on " << m_port;
+        //LOG(INFO) << "Started server on " << m_port;
         return true;
     }
-    LOG(ERROR) << "Unable to start server on " << port << ". Error: " << errorString();
+    //LOG(ERROR) << "Unable to start server on " << port << ". Error: " << errorString();
     disconnect(this, SLOT(handleConnection()));
     return false;
 }
@@ -64,8 +65,8 @@ QString Server::info() const
 void Server::handleConnection()
 {
     QTcpSocket* conn = nextPendingConnection();
-    LOG(INFO) << "Handling connection @" << conn << " from " <<
-        conn->peerAddress().toString();
+    //LOG(INFO) << "Handling connection @" << conn << " from " <<
+    //    conn->peerAddress().toString();
     ConnectionHandler* handler = new ConnectionHandler(conn, this);
     connect(handler, SIGNAL(ready(QString)), this, SIGNAL(ready(QString)), Qt::DirectConnection);
     connect(handler, SIGNAL(finished()), handler, SLOT(deleteLater()));

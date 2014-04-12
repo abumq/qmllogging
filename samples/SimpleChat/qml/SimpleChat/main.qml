@@ -1,17 +1,18 @@
-import QtQuick 2.0
-import org.easylogging.qml 1.1
+import QtQuick 2.1
+import QtQuick.Controls 1.0
 import org.easylogging.qml.simplechat 1.0
 
-Rectangle {
-    width: 360
-    height: 360
+ApplicationWindow {
+    height: 700
+    width: 600
+    title: "SimpleChat"
     id: mainRect
     
     signal messageReceived(string msg)
     
     onMessageReceived: {
         txtMessages.text = txtMessages.text + "\n" + msg.trim()
-        Log.info("Message received " + msg)
+        //Log.info("Message received " + msg)
     }
 
     MouseArea {
@@ -45,14 +46,15 @@ Rectangle {
             font.pixelSize: 12
             Keys.onReturnPressed: {
                 if (txtMessage.text.length > 0) {
-                    var message = txtNick.text + ": " + txtMessage.text
+                    var messageMe = "<b>Me</b>: " + txtMessage.text
+                    var message = "<b>" + txtNick.text + "</b>: " + txtMessage.text
                     Messenger.sendMessage(txtClientLocation.text.split(":")[0], 
                         txtClientLocation.text.split(":")[1], 
                         message)
-                    txtMessages.text = txtMessages.text + "\n" + message
+                    txtMessages.text = txtMessages.text + "\n" + messageMe
                     txtMessage.text = ""
                 } else {
-                    Log.warn("Ignoring empty message")
+                    //Log.warn("Ignoring empty message")
                 }
             }
 

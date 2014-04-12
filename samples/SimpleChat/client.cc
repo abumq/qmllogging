@@ -26,13 +26,13 @@ void Client::sendMessage(const QString& host, int port, const QString& msg)
     }
     m_tcpSocket->open(QAbstractSocket::ReadWrite);
     m_tcpSocket->connectToHost(host, port);
-    LOG(INFO) << "Estabilishing connection to " << host << ":" << port;
+    //LOG(INFO) << "Estabilishing connection to " << host << ":" << port;
     m_tcpSocket->waitForConnected(10000);
     if (m_tcpSocket->state() == QTcpSocket::ConnectedState) {
-        LOG(INFO) << "Sending message...";
+        //LOG(INFO) << "Sending message...";
         m_tcpSocket->write(msg.toStdString().c_str());
     } else {
-        LOG(ERROR) << "Unable to connect to " << host << ":" << port << ". " << m_tcpSocket->errorString();
+        //LOG(ERROR) << "Unable to connect to " << host << ":" << port << ". " << m_tcpSocket->errorString();
     }
     m_tcpSocket->close();
 }

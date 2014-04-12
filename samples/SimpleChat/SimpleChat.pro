@@ -1,9 +1,13 @@
-# Add more folders to ship with the application, here
+cache()
+
 folder_01.source = qml/SimpleChat
 folder_01.target = qml
 DEPLOYMENTFOLDERS = folder_01
 
-QT       += core network
+TEMPLATE = app
+TARGET = SimpleChat
+
+QT       += qml quick gui core network
 
 DEFINES += _ELPP_THREAD_SAFE
 
@@ -20,10 +24,15 @@ HEADERS += \
     client.h \
     ../../src/qmllogging.h
 
+OTHER_FILES += qml/SimpleChat/main.qml
+
+
+android: ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 # Installation path
 # target.path =
 
+    
 # Please do not modify the following two lines. Required for deployment.
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
