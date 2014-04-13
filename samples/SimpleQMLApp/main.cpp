@@ -1,5 +1,6 @@
 #include <QtGui/QGuiApplication>
 #include "qtquick2applicationviewer.h"
+#include <QDebug>
 #include "../../src/qmllogging.h"
 
 _INITIALIZE_QMLLOGGING

@@ -14,6 +14,7 @@ SOURCES += main.cpp
 HEADERS += \
     ../../src/qmllogging.h
 
+DEFINES += _ELPP_DEBUG_ERRORS _ELPP_DEBUG_INFO
 # Installation path
 # target.path =
 
