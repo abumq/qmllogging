@@ -63,7 +63,7 @@ public:
     static inline int getMajor() { return version()[0].digitValue(); }
     static inline int getMinor() { return version()[2].digitValue(); }
     static inline const QString version(void) { return QString("1.3"); }
-    static inline const QString releaseDate(void) { return QString("13-04-2014 2139hrs"); }
+    static inline const QString releaseDate(void) { return QString("13-04-2014 2144hrs"); }
 };
 
 class TimeTracker : el::base::NoCopy {
