@@ -1,7 +1,7 @@
 QML Logging
 ===========
 
-Easylogging++ wrapper for advanced logging support for QML applications
+Single-header only, Easylogging++ wrapper for advanced logging support for QML applications
 
                                        ‫بسم الله الرَّحْمَنِ الرَّحِيمِ
 
