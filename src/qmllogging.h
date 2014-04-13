@@ -91,9 +91,7 @@ public:
         if (addFlagLaterCallback) {
             el::Loggers::removeFlag(LoggingFlag::PerformanceTrackingCallback);
         }
-        m_timedBlocks.insert(blockName, 
-                             Tracker(blockName.toStdString(), _ELPP_MIN_UNIT,
-                                         m_loggerId));
+        m_timedBlocks.insert(blockName, Tracker(blockName.toStdString(), _ELPP_MIN_UNIT, m_loggerId));
         if (!removeFlagLaterDispatch) {
             el::Loggers::removeFlag(LoggingFlag::DisablePerformanceTrackingDispatch);
         }
@@ -126,9 +124,7 @@ class QmlLogging : public QQuickItem
 {
     Q_OBJECT
 public:
-    static void registerNew(
-            QQmlContext* rootContext,
-            const char* loggerId = "qml") {
+    static void registerNew(QQmlContext* rootContext, const char* loggerId = "qml") {
         qml::s_defaultLoggerId = std::string(loggerId);
         qml::s_qmlLogging = QSharedPointer<QmlLogging>(new QmlLogging);
         qmlRegisterType<QmlLogging>("org.easylogging.qml",
@@ -143,7 +139,7 @@ public:
     
     QmlLogging(QQuickItem *parent = 0) : QQuickItem(parent),
             m_hasError(false), m_errorString(QString()) {
-        el::Loggers::addFlag(el::LoggingFlag::DisableApplicationAbortOnFatalLog);
+        el::Loggers::addFlag(LoggingFlag::DisableApplicationAbortOnFatalLog);
         setObjectName("QmlLogging");
         el::Loggers::getLogger("QmlLogging");
         CLOG_AFTER_N(1, WARNING, "QmlLogging") 
@@ -162,7 +158,6 @@ private:
     TimeTracker m_tracker;
     QHash<QString, int> m_counters;
 public:
-    
     FUNCTION_DEFINER(INFO, info)
     FUNCTION_DEFINER(WARNING, warn)
     FUNCTION_DEFINER(DEBUG, debug)
@@ -203,7 +198,7 @@ public:
     // Assertion functions
     Q_INVOKABLE inline void assert(bool condition, const QString& msg) {
         if (_ELPP_DEBUG_LOG && !condition) {
-            CLOG(FATAL, m_loggerId.c_str()) << "Check failed: [" << msg << "] ";
+            CLOG(FATAL, m_loggerId.c_str()) << "Assertion failed: [" << msg << "] ";
         }
     }
 };
