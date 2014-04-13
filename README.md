@@ -70,7 +70,7 @@ log.info("I am info log")
 ...
 ```
 
-### Notes
+# Notes
 
 #### 1. Default logger
 Default logger for QML logging is `qml`. You can change this by passing second argument to `registerNew` function.
@@ -100,9 +100,11 @@ int main(int argc, char* argv[]) {
 Please note that some android devices do not allow to create `logs/` directory or log file, please check permissions. And you are facing issues and do not see any log when doing remote debugging (or from `adb shell`), enable error viewing by defining `_ELPP_DEBUG_ERRORS` to see whats the issue.
 
 #### 3. Log to standard output
-QML logging uses `qDebug()` to log to standard output (i.e, console or terminal). If you wish to disable this behaviour (and use `std::cout` and family instead), you can do so by defining macro `_QMLLOGGING_AVOID_QDEBUG` before including `qmllogging.h` file
+QML logging uses `qDebug()` to log to standard output (i.e, console or terminal). If you wish to disable this behaviour (and use `std::cout` and family instead), you can do so by defining macro `_QMLLOGGING_AVOID_QDEBUG` before including `qmllogging.h` file.
+ > Remember, there are consequences of avoiding `qDebug()` as `std::cout` and family do not work quite well (they are pretty much useless) with Qt Quick, specially when you are debugging in emulator or device; Plus, using `qDebug()` helps you look at your log using `adb logcat`.
 
- > Please see `samples/` directory for samples
+#### 4. Samples
+Please see `samples/` directory for samples. If a sample does not work, please feel free to [report an issue](https://github.com/easylogging/qmllogging/issues/) on github with details.
 
 # API
 
