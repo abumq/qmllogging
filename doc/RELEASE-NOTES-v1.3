@@ -1,0 +1,28 @@
+QML Logging v1.3 RELEASE NOTES
+-------------------------------
+
+Release type: Major
+API changes: Yes
+
+==========================
+=       API CHANGES      =
+==========================
+
+ - Main class renamed to `QmlLogging`
+ - Root context required for `registerNew`
+ - Context name cannot be changed and functions accessible using context `log`
+ - Uses `qml` logger by default - can be changed from `registerNew` function
+
+==========================
+=       BUG FIXES        =
+==========================
+
+ - Use Easylogging++ v9.68 for major bug fix for deploying to "not so accessible" filesystems
+ - Fixed Visual C++ build for Qt quick
+
+==========================
+=         NOTES          =
+==========================
+
+ - See https://github.com/easylogging/qmllogging/tree/master/doc for other release notes
+ - Closed issues: https://github.com/easylogging/qmllogging/issues?page=1&state=closed
