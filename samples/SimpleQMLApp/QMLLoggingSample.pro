@@ -16,7 +16,7 @@ HEADERS += \
     ../../src/qmllogging.h
 
 android: {
-    ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+    #ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 }
 
 DEFINES += _ELPP_DEBUG_ERRORS _ELPP_DEBUG_INFO
