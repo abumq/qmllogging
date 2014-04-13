@@ -93,8 +93,16 @@ int main(int argc, char* argv[]) {
    el::Configurations myConfigurations;
    myConfigurations.setGlobally(ConfigurationType::ToFile, "false");
    Loggers::setDefaultConfigurations(myConfigurations, true);
-
-   el::qml::QmlLogging::registerNew("Log");
+ 
+ 
+   // Your QML engine
+   QQmlApplicationEngine engine(QUrl("..."));
+   
+   el::qml::QmlLogging::registerNew(engine.rootContext());
+   
+   // Or if you are using QtQuick2ApplicationViewer
+   // QtQuick2ApplicationViewer viewer;
+   // el::qml::QMLLogging::registerNew(viewer.rootContext());
    
    // ... Your code
 }
