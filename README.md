@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
 Please note that some android devices do not allow to create `logs/` directory or log file, please check permissions. And you are facing issues and do not see any log when doing remote debugging (or from `adb shell`), enable error viewing by defining `_ELPP_DEBUG_ERRORS` to see whats the issue.
 
 #### 3. Log to standard output
-QML logging uses `std::cout` to log to standard output (i.e, console or terminal) 
+QML logging uses `qDebug()` to log to standard output (i.e, console or terminal). If you wish to disable this behaviour (and use `std::cout` and family instead), you can do so by defining macro `_QMLLOGGING_AVOID_QDEBUG` before including `qmllogging.h` file
 
  > Please see `samples/` directory for samples
 
