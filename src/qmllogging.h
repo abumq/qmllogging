@@ -1,5 +1,5 @@
 //
-//  QmlLogging v1.2
+//  QmlLogging v1.3
 //  Single-header only, Easylogging++ wrapper for QML logging
 //
 //  Requires:
@@ -39,7 +39,7 @@
 #endif  // !defined(_QMLLOGGING_AVOID_QDEBUG)
 
 // NOTE: Include easylogging++ according to your configurations
-#include "/home/majid/projects/easylogging/easyloggingpp/src/easylogging++.h"
+#include <easylogging++.h>
 
 namespace el {
 namespace qml {
@@ -61,8 +61,8 @@ class VersionInfo : el::base::StaticClass {
 public:
     static inline int getMajor() { return version()[0].digitValue(); }
     static inline int getMinor() { return version()[2].digitValue(); }
-    static inline const QString version(void) { return QString("1.2"); }
-    static inline const QString releaseDate(void) { return QString("13-04-2014 2120hrs"); }
+    static inline const QString version(void) { return QString("1.3"); }
+    static inline const QString releaseDate(void) { return QString("13-04-2014 2135hrs"); }
 };
 
 class TimeTracker : el::base::NoCopy {

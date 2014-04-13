@@ -6,15 +6,15 @@ Single-header only, Easylogging++ wrapper for advanced logging support for QML a
                                        ‫بسم الله الرَّحْمَنِ الرَّحِيمِ
 
 
-> **Manual For v1.2**
+> **Manual For v1.3**
 
 ### Quick Links
 
   [![download] Download Latest](http://qml.easylogging.org/latest.zip)
   
-  [![notes] Release Notes](https://github.com/easylogging/qmllogging/tree/master/doc/RELEASE-NOTES-v1.2)
+  [![notes] Release Notes](https://github.com/easylogging/qmllogging/tree/master/doc/RELEASE-NOTES-v1.3)
  
-  [![samples] Samples](https://github.com/easylogging/qmllogging/tree/v1.2/samples)
+  [![samples] Samples](https://github.com/easylogging/qmllogging/tree/v1.3/samples)
   
   [![www] Project Homepage](http://qml.easylogging.org/)
 
