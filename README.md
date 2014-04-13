@@ -103,7 +103,11 @@ Please note that some android devices do not allow to create `logs/` directory o
 QML logging uses `qDebug()` to log to standard output (i.e, console or terminal). If you wish to disable this behaviour (and use `std::cout` and family instead), you can do so by defining macro `_QMLLOGGING_AVOID_QDEBUG` before including `qmllogging.h` file.
  > Remember, there are consequences of avoiding `qDebug()` as `std::cout` and family do not work quite well (they are pretty much useless) with Qt Quick, specially when you are debugging in emulator or device; Plus, using `qDebug()` helps you look at your log using `adb logcat`.
 
-#### 4. Samples
+#### 4. Default Flags
+QML logging adds following flags 
+ * `DisableApplicationAbortOnFatalLog`
+
+#### 5. Samples
 Please see `samples/` directory for samples. If a sample does not work, please feel free to [report an issue](https://github.com/easylogging/qmllogging/issues/) on github with details.
 
 # API
