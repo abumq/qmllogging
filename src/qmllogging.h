@@ -144,15 +144,15 @@ public:
     QmlLogging(QQuickItem *parent = 0) : QQuickItem(parent),
             m_hasError(false), m_errorString(QString()) {
         el::Loggers::addFlag(el::LoggingFlag::DisableApplicationAbortOnFatalLog);
-        m_loggerId = qml::s_defaultLoggerId;
-        el::Loggers::getLogger(m_loggerId);
-        m_tracker.setLoggerId(m_loggerId);
         setObjectName("QmlLogging");
         el::Loggers::getLogger("QmlLogging");
         CLOG_AFTER_N(1, WARNING, "QmlLogging") 
             << "Multiple instances of QmlLogging registered";
+        m_loggerId = qml::s_defaultLoggerId;
+        el::Loggers::getLogger(m_loggerId);
+        m_tracker.setLoggerId(m_loggerId);
     }
-    
+
     bool hasError(void) const { return m_hasError; }
     QString errorString(void) const { return m_errorString; }
 private:
