@@ -55,13 +55,13 @@ public:
 class TimeTracker : el::base::NoCopy {
 public:
     typedef el::base::PerformanceTracker Tracker;
-    typedef QHash<QString, Tracker*> HashMap;
+    typedef QHash<QString, Tracker> HashMap;
     
     virtual ~TimeTracker(void) {
-        for (const HashMap::key_type& key : m_timedBlocks.keys()) {
+        /*for (const HashMap::key_type& key : m_timedBlocks.keys()) {
             Tracker* trackable = m_timedBlocks.take(key);
             el::base::utils::safeDelete(trackable);
-        }
+        }*/
         m_timedBlocks.clear();
     }
     
@@ -74,22 +74,33 @@ public:
             ELPP_INTERNAL_ERROR("Set loggerID first!", false);
             return;
         }
-        // Why on heap? T is destroyed after insertion, and we don't want this to happen
-        // otherwise unnecessary check occurs 
+        bool removeFlagLaterDispatch = el::Loggers::hasFlag(LoggingFlag::DisablePerformanceTrackingDispatch);
+        bool addFlagLaterCallback = el::Loggers::hasFlag(LoggingFlag::PerformanceTrackingCallback);
+        if (!removeFlagLaterDispatch) {
+            el::Loggers::addFlag(LoggingFlag::DisablePerformanceTrackingDispatch);
+        }
+        if (addFlagLaterCallback) {
+            el::Loggers::removeFlag(LoggingFlag::PerformanceTrackingCallback);
+        }
         m_timedBlocks.insert(blockName, 
-                             new Tracker(blockName.toStdString(), _ELPP_MIN_UNIT,
+                             Tracker(blockName.toStdString(), _ELPP_MIN_UNIT,
                                          m_loggerId));
+        if (!removeFlagLaterDispatch) {
+            el::Loggers::removeFlag(LoggingFlag::DisablePerformanceTrackingDispatch);
+        }
+        if (addFlagLaterCallback) {
+            el::Loggers::addFlag(LoggingFlag::PerformanceTrackingCallback);
+        }
     }
     void timeEnd(const HashMap::key_type& blockName) {
         if (m_timedBlocks.contains(blockName)) {
-            Tracker* trackable = m_timedBlocks.take(blockName);
-            el::base::utils::safeDelete(trackable);
+            m_timedBlocks.remove(blockName);
         }
     }
     void timeCheck(const HashMap::key_type& blockName, QString checkpointId = QString()) {
         HashMap::iterator iterator = m_timedBlocks.find(blockName);
         if (iterator != m_timedBlocks.end()) {
-            (*iterator)->checkpoint(checkpointId.toStdString().c_str());
+            iterator->checkpoint(checkpointId.toStdString().c_str());
         }
     }
 private:

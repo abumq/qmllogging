@@ -44,7 +44,13 @@ Rectangle {
             name: "RED"
             PropertyChanges { target: rect; color: "red" }
             PropertyChanges { target: mainText; color: "yellow" }
-            StateChangeScript { script: log.info("State changed to RED") }
+            StateChangeScript {
+                script: {
+                    log.timeBegin("stateChangedRed")
+                    log.info("State changed to RED")
+                    log.timeEnd("stateChangedRed")
+                }
+            }
         }
     ]
     transitions: [
