@@ -24,9 +24,8 @@ Rectangle {
                 log.info("1. This is ", rect, " and this is continuation of log")
                 log.info("2. This is ", rect)
                 log.verbose(2, "This is verbose")
-                log.info("2. This is ", rect)
-                
             }
+            log.assert(rect != null, "Rect is not suppose to be null now")
             log.timeEnd("onClicked")
         }
     }

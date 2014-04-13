@@ -1,6 +1,6 @@
 #include <QtGui/QGuiApplication>
 #include "qtquick2applicationviewer.h"
-#include <QDebug>
+#define _QMLLOGGING_AVOID_QDEBUG
 #include "../../src/qmllogging.h"
 
 _INITIALIZE_QMLLOGGING
@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     QtQuick2ApplicationViewer viewer;
     
     el::qml::QmlLogging::registerNew(viewer.rootContext());
+    
     viewer.setMainQmlFile(QStringLiteral("qml/QMLLoggingSample/main.qml"));
     viewer.showExpanded();
 

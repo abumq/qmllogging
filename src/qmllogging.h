@@ -3,7 +3,7 @@
 //  Single-header only, Easylogging++ wrapper for QML logging
 //
 //  Requires:
-//     * Easylogging++ v9.67 (or higher)
+//     * Easylogging++ v9.68 (or higher)
 //
 //  Copyright (c) 2014 Majid Khan
 //
@@ -23,9 +23,22 @@
 #include <QtCore/QString>
 #include <QtCore/QObject>
 #include <QtCore/QHash>
-
 #define _ELPP_QT_LOGGING
-// NOTE: Include easylogging++ this according to your configurations
+#if !defined(_QMLLOGGING_AVOID_QDEBUG)
+#   include <QDebug>
+#   define _ELPP_INTERNAL_DEBUGGING_OUT_INFO qDebug()
+#   define _ELPP_INTERNAL_DEBUGGING_OUT_ERROR qDebug()
+#   define _ELPP_INTERNAL_DEBUGGING_ENDL ""
+#   define _ELPP_INTERNAL_DEBUGGING_MSG(msg) QString::fromStdString(msg)
+#   define ELPP_CUSTOM_COUT qDebug()
+#   if defined(_ELPP_UNICODE)
+#   define ELPP_CUSTOM_COUT_LINE(msg) QString::fromWCharArray(msg.c_str()).trimmed()
+#   else
+#   define ELPP_CUSTOM_COUT_LINE(msg) QString::fromStdString(msg).trimmed()
+#   endif  // defined(_ELPP_UNICODE)
+#endif  // !defined(_QMLLOGGING_AVOID_QDEBUG)
+
+// NOTE: Include easylogging++ according to your configurations
 #include "/home/majid/projects/easylogging/easyloggingpp/src/easylogging++.h"
 
 namespace el {
@@ -58,10 +71,6 @@ public:
     typedef QHash<QString, Tracker> HashMap;
     
     virtual ~TimeTracker(void) {
-        /*for (const HashMap::key_type& key : m_timedBlocks.keys()) {
-            Tracker* trackable = m_timedBlocks.take(key);
-            el::base::utils::safeDelete(trackable);
-        }*/
         m_timedBlocks.clear();
     }
     

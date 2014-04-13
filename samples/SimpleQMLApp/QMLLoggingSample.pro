@@ -19,7 +19,7 @@ android: {
     # ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 }
 
-DEFINES += _ELPP_DEBUG_ERRORS _ELPP_DEBUG_INFO
+#DEFINES += _ELPP_DEBUG_ERRORS _ELPP_DEBUG_INFO
 # Installation path
 # target.path =
 
