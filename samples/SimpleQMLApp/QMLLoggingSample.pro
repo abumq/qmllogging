@@ -8,11 +8,16 @@ QML_IMPORT_PATH =
 
 QMAKE_CXXFLAGS += -std=c++11
 DEFINES += _ELPP_ENABLE_ERRORS
-# The .cpp file which was generated for your project. Feel free to hack it.
+
+
 SOURCES += main.cpp
 
 HEADERS += \
     ../../src/qmllogging.h
+
+android: {
+    ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+}
 
 DEFINES += _ELPP_DEBUG_ERRORS _ELPP_DEBUG_INFO
 # Installation path

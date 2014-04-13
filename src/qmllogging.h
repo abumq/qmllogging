@@ -26,7 +26,7 @@
 
 #define _ELPP_QT_LOGGING
 // NOTE: Include easylogging++ this according to your configurations
-#include <easylogging++.h>
+#include "/home/majid/projects/easylogging/easyloggingpp/src/easylogging++.h"
 
 namespace el {
 namespace qml {
