@@ -23,15 +23,13 @@ Easylogging++ wrapper for advanced logging support for QML applications
   [![paypal]](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4W7YDRCXWURWG)
 
 # Introduction
-Provides functionalities to write logs and do various other functions for your QML applications. You should check out [Easylogging++](https://github.com/easylogging/easyloggingpp/) to see some more exciting things you can do.
-
-This project is in early stages and any type of support is accepted.
+Provides functionalities to write logs and provides various other functionalities for your QML applications. You should check out [Easylogging++](https://github.com/easylogging/easyloggingpp/) to see more exciting things you can do.
 
 # Getting Started
 ### Download
-Current stable release is always http://qml.easylogging.org/latest.zip
+Current stable release is http://qml.easylogging.org/latest.zip
 
-Before you start, please read basics of Easylogging++, because this project is essentially a wrapper around the library, hence basic functionality is the same.
+Before you start, please read basics of [Easylogging++](https://github.com/easylogging/easyloggingpp/) as this project is essentially a wrapper around the library, hence basic functionality is the same.
 
 ### Quick Start
 In order to get started with QML Logging, you can follow three easy steps;
@@ -45,25 +43,39 @@ In order to get started with QML Logging, you can follow three easy steps;
 _INITIALIZE_QMLLOGGING
 
 int main(int argc, char* argv[]) {
-   _START_EASYLOGGINGPP(argc, argv); // Optional but always recommended to put this - needed by some functionalities
-   ...
-   el::qml::QMLLogging::registerNew("Log");
-   ...
+   QGuiApplication app(argc, argv);
+   // Following line is optional but always recommended to put this - needed by some functionalities
+   _START_EASYLOGGINGPP(argc, argv);
+   
+   // Your Qml engine
+   QQmlApplicationEngine engine(QUrl("...));
+   
+   el::qml::QmlLogging::registerNew(engine.rootContext());
+   
+   // Or if you are using QtQuick2ApplicationViewer
+   // QtQuick2ApplicationViewer viewer;
+   // el::qml::QMLLogging::registerNew(viewer.rootContext());
+   
+   // ...
+   
+   return app.exec();
 }
 ```
 
 ```c++
-import org.easylogging.qml.1.1
+import org.easylogging.qml 1.1
 
 ...
-Log.info("I am info log")
+log.info("I am info log")
 ...
 ```
 
 ### Notes
 
+#### 1. Default logger
 Default logger for QML logging is `qml`. You can change this by passing second argument to `registerNew` function.
 
+#### 2. Log to file
 By default, your QML application will also write to `logs/` directory, you can disable this behaviour by reconfiguring default configurations (also update existing loggers). This configuration will have `el::ConfigurationType::ToFile` to `false`.
 
 ```c++
@@ -72,15 +84,23 @@ By default, your QML application will also write to `logs/` directory, you can d
 _INITIALIZE_QMLLOGGING
 
 int main(int argc, char* argv[]) {
+   // ... Your code
    _START_EASYLOGGINGPP(argc, argv);
 
    el::Configurations myConfigurations;
    myConfigurations.setGlobally(ConfigurationType::ToFile, "false");
    Loggers::setDefaultConfigurations(myConfigurations, true);
 
-   el::qml::QMLLogging::registerNew("Log");
+   el::qml::QmlLogging::registerNew("Log");
+   
+   // ... Your code
 }
 ```
+
+Please note that some android devices do not allow to create `logs/` directory or log file, please check permissions. And you are facing issues and do not see any log when doing remote debugging (or from `adb shell`), enable error viewing by defining `_ELPP_DEBUG_ERRORS` to see whats the issue.
+
+#### 3. Log to standard output
+QML logging uses `std::cout` to log to standard output (i.e, console or terminal) 
 
  > Please see `samples/` directory for samples
 
