@@ -12,6 +12,10 @@ Easylogging++ wrapper for advanced logging support for QML applications
 
   [![download] Download Latest](http://qml.easylogging.org/latest.zip)
   
+  [![notes] Release Notes](https://github.com/easylogging/qmllogging/tree/master/doc/RELEASE-NOTES-v1.1)
+ 
+  [![samples] Samples](https://github.com/easylogging/qmllogging/tree/v1.1/samples)
+  
   [![www] Project Homepage](http://qml.easylogging.org/)
 
   [![pledgie]](http://www.pledgie.com/campaigns/22070)
@@ -137,4 +141,5 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
   [www]: http://easylogging.org/images/logo-www.png?v=2
   [paypal]: https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif
   [pledgie]: https://pledgie.com/campaigns/22070.png
-
+  [samples]: http://easylogging.org/images/sample.png?v=2
+  [notes]: http://easylogging.org/images/notes.png?v=4
