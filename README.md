@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
    _START_EASYLOGGINGPP(argc, argv);
    
    // Your Qml engine
-   QQmlApplicationEngine engine(QUrl("...));
+   QQmlApplicationEngine engine(QUrl("..."));
    
    el::qml::QmlLogging::registerNew(engine.rootContext());
    
