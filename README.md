@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
    
    // Or if you are using QtQuick2ApplicationViewer
    // QtQuick2ApplicationViewer viewer;
-   // el::qml::QMLLogging::registerNew(viewer.rootContext());
+   // el::qml::QmlLogging::registerNew(viewer.rootContext());
    
    // ...
    
@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
    
    // Or if you are using QtQuick2ApplicationViewer
    // QtQuick2ApplicationViewer viewer;
-   // el::qml::QMLLogging::registerNew(viewer.rootContext());
+   // el::qml::QmlLogging::registerNew(viewer.rootContext());
    
    // ... Your code
 }
