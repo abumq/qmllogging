@@ -150,8 +150,8 @@ Here is list of public functions
 ```
 The MIT License (MIT)
 
-Copyright (c) 2014 Majid Khan
-http://easylogging.org/
+Copyright (c) 2012-2014 Amrayn Web Services
+https://amrayn.com
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
