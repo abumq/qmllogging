@@ -6,14 +6,11 @@
 //  Requires:
 //     * Easylogging++ v9.68 (or higher)
 //
-//  Copyright (c) 2014 Majid Khan
+//  Copyright (c) 2012-2014 Amrayn Web Services
 //
 //  This library is released under the MIT Licence.
-//  http://www.easylogging.org/licence.php
 //
-//  support@easylogging.org
-//  http://qml.easylogging.org
-//  https://github.com/easylogging/qmllogging
+//  https://amrayn.com
 //
 #ifndef QMLLOGGING_H
 #define QMLLOGGING_H
